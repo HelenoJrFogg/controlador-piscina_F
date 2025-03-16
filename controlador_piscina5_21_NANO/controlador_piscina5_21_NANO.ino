@@ -8,8 +8,8 @@
 //////////////////////Sensores
 #include <OneWire.h>
 #include <DallasTemperature.h>
-#define ONE_WIRE_BUS_PISC         2         // Pino do sensor da temperatura da piscina
-#define ONE_WIRE_BUS_PAINEL       3         // Pino do sensor do painel de aquecimento
+#define ONE_WIRE_BUS_PISC         3         // Pino do sensor da temperatura da piscina
+#define ONE_WIRE_BUS_PAINEL       5         // Pino do sensor do painel de aquecimento
 #define ONE_WIRE_BUS_RETORNO      4         // Pino sensor de retorno de agua
 OneWire SensorPiscina(ONE_WIRE_BUS_PISC);
 OneWire oneWire_out(ONE_WIRE_BUS_PAINEL);
@@ -117,7 +117,7 @@ int SetTempoBombaDeslEEPROM;
 
 int bomba1 = 2;// pino acionamento da bomba de aquecimenti lento.
 int bomba2 = 2;// pino acionamento da bomba de aquecimento rapido.
-int bomba3 = 2;// pino acionamento da bomba de filtragem.
+int bombafiltro = 2;// pino acionamento da bomba de filtragem.
 
 
 /////////////////////////////////////////
@@ -148,7 +148,7 @@ const long interval = 800;
 
 int temperaturapiscina;
 int tempersaidaaquecedor;
-int temperaturaplaca;
+int temperaturaPainel;
 
 boolean disparoaquecerpiscina;
 boolean placaaquecida;
@@ -197,7 +197,7 @@ void setup(void)
   
   pinMode(bomba1, OUTPUT);
   pinMode(bomba2, OUTPUT);
-  pinMode(bomba3, OUTPUT);
+  pinMode(bombafiltro, OUTPUT);
   
   Serial.begin(9600);
   Serial.println(" ");
@@ -356,7 +356,7 @@ if ( buttonStateSet == HIGH || buttonStateUp == HIGH || buttonStateDw == HIGH){
   //Serial.println("menu_on");
 
 
- if (millis() -  tempomenu > 10000) {
+ if (millis() -  tempomenu > 20000) {
     
   chamadamenu = LOW;
   
@@ -421,15 +421,15 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 1000 ) ) {
             
         lcd.setCursor(0, 0);
         lcd.print("1 Temperatura Maxima");                    
-        lcd.setCursor(3, 1);
-        lcd.print("da Piscina");                    
-        //lcd.setCursor(0, 0);
-        //lcd.print("1 Temperatura Maxima");
+        lcd.setCursor(0, 1);
+        lcd.print("   de aquecimento");                    
+        lcd.setCursor(0, 2);
+        lcd.print("    da Piscina");
         lcd.setCursor(3, 3);
         lcd.print(SetTemperPiscFloat/2,1);
           lcd.setCursor(7, 3);
           lcd.write((byte)0);
-          lcd.print(">");
+          lcd.print("  >  ");
           lcd.print(SetTemperPiscFloat);
        break; 
        
@@ -444,9 +444,9 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 1000 ) ) {
             lcd.setCursor(0, 0);
             lcd.print("2 Ganho minimo de");
             lcd.setCursor(0, 1);
-            lcd.print("temperatura do");
+            lcd.print("Temperatura do");
             lcd.setCursor(0, 2);
-            lcd.print("painel");
+            lcd.print(" Sistema ligado");
             lcd.setCursor(3, 3);
             lcd.print(SetDifTemperEntrSaidaFloat/10);
             lcd.setCursor(8, 3);
@@ -467,9 +467,9 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 1000 ) ) {
         lcd.setCursor(0, 0);
         lcd.print("3 Temperatura de");
         lcd.setCursor(0, 1);
-        lcd.print("Acionamento da bomba");
+        lcd.print("acionam. da protecao");
         lcd.setCursor(0, 2);
-        lcd.print("Protecao por calor");
+        lcd.print("por calor do painel");
         lcd.setCursor(3, 3);
         lcd.print(SetTemperSuperAqfloat /2 );
 
@@ -490,11 +490,11 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 1000 ) ) {
             SetTemperDegeloFloat = SetTemperDegeloFloat - 1;
             }
             lcd.setCursor(0, 0);
-            lcd.print("4 Temperatra de Inicio");
-            lcd.setCursor(5, 1);
-            lcd.print("do Degelo");
-            //lcd.setCursor(0, 0);
-            //lcd.print("6 Temperatra deInicDegelo");
+            lcd.print("4 Temperatura Protec");
+            lcd.setCursor(0, 1);
+            lcd.print("do Anticongelamento");
+            lcd.setCursor(0, 2);
+            lcd.print(" do Painel");
             lcd.setCursor(5, 3);
             lcd.print((SetTemperDegeloFloat/10) -10);
             lcd.setCursor(10, 3);
@@ -516,9 +516,9 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 1000 ) ) {
            lcd.setCursor(0, 0);
            lcd.print("5 Tempo de Acionamen");
             lcd.setCursor(0, 1);
-           lcd.print("to da Bomba");
+           lcd.print("da Bomba do");
            lcd.setCursor(0, 2);
-           lcd.print("(ciclo Circalacao)");
+           lcd.print("ciclo de Protecao");
            // lcd.print(SetTemperSuperAqFloat);
            total = SetTempoAcionBombaFloat * 10;
            horas = (total / 3600);
@@ -526,7 +526,7 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 1000 ) ) {
            segundos = (total % 60);
 
               // lcd.setCursor(0, 1);
-               lcd.print(SetTempoAcionBombaFloat);
+              // lcd.print(SetTempoAcionBombaFloat);
 
            lcd.setCursor(2, 3);
         if (horas < 10){
@@ -559,11 +559,11 @@ lcd.print(SetTempoAcionBombaFloat);
            SetTempoBombaDeslFloat = SetTempoBombaDeslFloat - 1;
            }
            lcd.setCursor(0, 0);
-           lcd.print("6 Tempo minimo do");
+           lcd.print("6 Tempo de intervalo");
            lcd.setCursor(0, 1);
-           lcd.print("Intervalo de Bomba");
+           lcd.print("de Bomba desligada");
            lcd.setCursor(1, 2);
-           lcd.print("Desligada");
+           lcd.print("do ciclo d protecao");
            // lcd.print(SetTemperSuperAqFloat);
            total = SetTempoBombaDeslFloat * 30;
            horas = (total / 3600);
@@ -627,7 +627,7 @@ ultimoestadobotoes = botoes ;
 
 
   temperaturapiscina = 10 * sensor_piscina.getTempCByIndex(0);
-  temperaturaplaca = 10 * sensor_painel.getTempCByIndex(0);
+  temperaturaPainel = 10 * sensor_painel.getTempCByIndex(0);
   tempersaidaaquecedor = 10 * sensor_retorno.getTempCByIndex(0);
   
   Serial.print("  tempPisc: ");
@@ -654,10 +654,10 @@ ultimoestadobotoes = botoes ;
     lcd.print(sensor_piscina.getTempCByIndex(0) - sensor_retorno.getTempCByIndex(0));
          
     lcd.setCursor(0, 3);
-    lcd.print(temperaturaplaca / 5);
+    lcd.print(temperaturaPainel / 5);
     // lcd.print("Bomba:");
      if (digitalRead(bomba1) == 1){
-       lcd.print("    Ligada");
+       lcd.print("AQUECENDO");
        } else    lcd.print(" Desligada");
 
 // unsigned long stop = millis();
@@ -667,19 +667,19 @@ ultimoestadobotoes = botoes ;
 
     lcd.setCursor(12, 2);
     lcd.print("tp:");
-    lcd.print(temperaturaplaca);
+    lcd.print(temperaturaPainel);
 
 
   
 
- if ((temperaturaplaca / 5  >  SetTemperSuperAqEEPROM ) || (temperaturaplaca < SetTemperDegeloEEPROM - 100 ) && millis() > 10000) 
+ if ((temperaturaPainel / 5  >  SetTemperSuperAqEEPROM ) || (temperaturaPainel < SetTemperDegeloEEPROM - 100 ) && millis() > 10000) 
      {
        circulacaodeprotecao = HIGH;
      }  
    
    
    
-   if ((temperaturaplaca >= (SetTemperSuperAqEEPROM /5) + 40) || (temperaturaplaca * 10 < SetTemperDegeloEEPROM))
+   if ((temperaturaPainel >= (SetTemperSuperAqEEPROM /5) + 40) || (temperaturaPainel * 10 < SetTemperDegeloEEPROM))
         {
           digitalWrite(bomba1, HIGH);
          tempo = basetempo10seg;
@@ -697,7 +697,7 @@ ultimoestadobotoes = botoes ;
       
        }
 
-if (temperaturaplaca * 2 >= SetTemperSuperAqEEPROM && circulacaodeprotecao == LOW ){
+if (temperaturaPainel * 2 >= SetTemperSuperAqEEPROM && circulacaodeprotecao == LOW ){
       disparoaquecerpiscina = HIGH;
       TAcionBomba = basetempo10seg;
       }
@@ -875,7 +875,7 @@ Serial.println(TemperPiscEEPROM);
             lcd.print("Salvando na memoria");
             //lcd.setCursor(0, 1);
            //lcd.print("    memoria");
-        delay(5000);
+        delay(3000);
             
     TemperPiscEEPROM = EEPROM.read(0);
     DifTemperEntrSaidaEEPROM = EEPROM.read(1);
