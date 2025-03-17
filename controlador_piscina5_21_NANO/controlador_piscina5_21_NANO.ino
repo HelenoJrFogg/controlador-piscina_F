@@ -22,21 +22,24 @@ DallasTemperature sensor_retorno(&oneWire_out_1);
 
 /////////////////////////////////////Botões:
 unsigned long lastDebounceTime = 0 ;
-//int analogreading;
-int buttonPinSet = 11;    // the number of the pushbutton pin
+
 const int ledPin = 13;      // the number of the LED pin
 int ledState = HIGH;         // the current state of the output pin
+
+//int analogreading;
+int debounceDelay = 50;    // the debounce time; increase if the output flickers
+
+int buttonPinSet = 11;    // the number of the pushbutton pin
 int buttonStateSet;             // the current reading from the input pin
 bool lastButtonStateSet = LOW;   // the previous reading from the input pin
 unsigned long lastDebounceTimeSet = 0;  // the last time the output pin was toggled
-int debounceDelay = 50;    // the debounce time; increase if the output flickers
 
-int buttonPinUp = 12;    // the number of the pushbutton pin
+int buttonPinUp = 10;    // the number of the pushbutton pin
 int buttonStateUp;             // the current reading from the input pin
 bool lastButtonStateUp = LOW;   // the previous reading from the input pin
 unsigned long lastDebounceTimeUp = 0;  // the last time the output pin was toggled
 
- int buttonPinDw = 10;    // the number of the pushbutton pin
+ int buttonPinDw = 12;    // the number of the pushbutton pin
 int buttonStateDw;             // the current reading from the input pin
 bool lastButtonStateDw = LOW;   // the previous reading from the input pin
 unsigned long lastDebounceTimeDw = 0;  // the last time the output pin was toggled
@@ -156,7 +159,7 @@ boolean placaaquecida;
 boolean difentrsaida;
 boolean circularagua;
 boolean aquecendo;
-boolean circulacaodeprotecao;
+boolean circulacaodeprotecao = LOW;
 
 unsigned long tbstart;
 int tbstop;
