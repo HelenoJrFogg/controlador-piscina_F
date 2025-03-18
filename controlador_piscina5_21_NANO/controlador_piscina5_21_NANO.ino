@@ -115,6 +115,13 @@ int SetTempoBombaDesl;
 float SetTempoBombaDeslFloat;
 int SetTempoBombaDeslEEPROM;
 
+nt SetTempoAcionBombaCirc;
+float SetTempoAcionBombaCircFloat;
+int SetTempoAcionBombaCircEEPROM;
+
+int SetTempoBombaCircDeslCirc;
+float SetTempoBombaCircDeslFloat;
+int SetTempoBombaCircDeslEEPROM;
 
 
 
@@ -167,7 +174,7 @@ unsigned long basetempo10seg;
 unsigned long basetempo30seg;
 int TAcionBomba;
 int TIntervBomba;
-boolean bombacionada;
+boolean bomba1_acionada;
 unsigned long tbomba;
 unsigned long tempobombaacioncircprot; //tempo de acionamento da bomba no acionamento de proteção.
 unsigned long tempointervdeprot;       // tempo de intervalo da bomba no acionamento de proteção. 
@@ -318,6 +325,9 @@ contador = 0;
   SetTemperDegelo = SetTemperDegeloEEPROM;
   SetTempoAcionBomba = SetTempoAcionBombaEEPROM;
   SetTempoBombaDesl = SetTempoBombaDeslEEPROM;
+  SetTempoAcionBombaCirc = SetTempoAcionBombaCircEEPROM;
+  SetTempoBombaCircDesl = SetTempoBombaCircDeslEEPROM;
+  
   
   
   
@@ -758,10 +768,10 @@ if (  temperAq >= difT){
  tbomba = basetempo10seg - TAcionBomba;
 
  if ( (tbomba  < SetTempoAcionBombaEEPROM) || disparoaquecerpiscina == HIGH )  {
-     bombacionada = HIGH;
+     bomba1_acionada = HIGH;
      //digitalWrite(bomba, HIGH);
      }
- else{bombacionada = LOW;
+ else{bomba1_acionada = LOW;
     // digitalWrite(bomba, LOW);
      }
 
@@ -934,10 +944,10 @@ Serial.println(TemperPiscEEPROM);
     }
 
 
-    /// Função controle da bomba aquicimento
+    /// Função controle da bomba aquecimento
 
-    void controle_bomba(){
-      if (temperaturapiscina / 5 < SetTemperPiscFloat && temperaturaPainel > SetTempInPainelFloat ){
+    void controle_bomba_aq(){
+      if (temperaturapiscina / 5 < SetTemperPiscFloat && temperaturaPainel >= SetTempInPainelFloat ){
 
         if (condition)
         {
@@ -945,7 +955,7 @@ Serial.println(TemperPiscEEPROM);
         }
         
 
-        digitalWrite(bomba1, HIGH);
+        //digitalWrite(bomba1, HIGH);
 
         }
         
@@ -958,7 +968,7 @@ else
 }
 
 
-      if (bombacionada == HIGH){
+      if (bomba1_acionada == HIGH){
         digitalWrite(bomba1, HIGH);
         }
         else digitalWrite(bomba1, LOW);
@@ -971,8 +981,12 @@ else
 }
 
 
-      if (bombacionada == HIGH){
+
+
+
+
+      if (bomba1_acionada == HIGH){
         digitalWrite(bomba1, HIGH);
         }
-        else digitalWrite(bomba1, LOW);
-        }  
+        //else digitalWrite(bomba1, LOW);
+        //}  
