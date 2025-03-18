@@ -119,7 +119,7 @@ nt SetTempoAcionBombaCirc;
 float SetTempoAcionBombaCircFloat;
 int SetTempoAcionBombaCircEEPROM;
 
-int SetTempoBombaCircDeslCirc;
+int SetTempoBombaCircDesl;
 float SetTempoBombaCircDeslFloat;
 int SetTempoBombaCircDeslEEPROM;
 
@@ -949,33 +949,15 @@ Serial.println(TemperPiscEEPROM);
     void controle_bomba_aq(){
       if (temperaturapiscina / 5 < SetTemperPiscFloat && temperaturaPainel >= SetTempInPainelFloat ){
 
-        if (condition)
-        {
-          /* code */
-        }
+     
         
-
-        //digitalWrite(bomba1, HIGH);
-
-        }
-        
-    {
-  /* code */
     } 
-else
-{
-  /* code */
-}
 
-
-      if (bomba1_acionada == HIGH){
-        digitalWrite(bomba1, HIGH);
-        }
-        else digitalWrite(bomba1, LOW);
-        }  
-
-
-    void controle_bomba(){
+    
+    
+    
+  }
+        void controle_bomba(){
 {
   /* code */
 }
@@ -989,4 +971,4 @@ else
         digitalWrite(bomba1, HIGH);
         }
         //else digitalWrite(bomba1, LOW);
-        //}  
+        }  
