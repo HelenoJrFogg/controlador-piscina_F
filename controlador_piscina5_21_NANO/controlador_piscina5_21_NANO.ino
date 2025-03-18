@@ -649,7 +649,8 @@ ultimoestadobotoes = botoes ;
  // Serial.println("fim do while");
 
  delay(100);
- }  ////////////////////////fim do while
+
+ }  //////////////////////// fim do while
   
   
 
@@ -931,3 +932,47 @@ Serial.println(TemperPiscEEPROM);
 
 
     }
+
+
+    /// Função controle da bomba aquicimento
+
+    void controle_bomba(){
+      if (temperaturapiscina / 5 < SetTemperPiscFloat && temperaturaPainel > SetTempInPainelFloat ){
+
+        if (condition)
+        {
+          /* code */
+        }
+        
+
+        digitalWrite(bomba1, HIGH);
+
+        }
+        
+    {
+  /* code */
+    } 
+else
+{
+  /* code */
+}
+
+
+      if (bombacionada == HIGH){
+        digitalWrite(bomba1, HIGH);
+        }
+        else digitalWrite(bomba1, LOW);
+        }  
+
+
+    void controle_bomba(){
+{
+  /* code */
+}
+
+
+      if (bombacionada == HIGH){
+        digitalWrite(bomba1, HIGH);
+        }
+        else digitalWrite(bomba1, LOW);
+        }  
