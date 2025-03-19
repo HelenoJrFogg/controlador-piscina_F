@@ -58,7 +58,7 @@ unsigned long lastDebounceTimeDw = 0;  // the last time the output pin was toggl
    unsigned long whilelastTime = 0;
    bool ultimoestadobotoes ;
   int temporizador;
-
+  
 
    
 //LCD...
@@ -184,7 +184,7 @@ unsigned long tempointervdeprot;       // tempo de intervalo da bomba no acionam
 
  bool DisparoProtecao;
 
-unsigned long tempoestabilizacao ;
+unsigned long tempoestabilizacao = 0;
 
 void setup(void)
 
@@ -952,12 +952,16 @@ void controle_bomba_aq(){
       if (temperaturapiscina < SetTemperPiscFloat * 5 && temperaturaPainel >= SetTempInPainelFloat * 5 ){ 
         lcd.setCursor(10, 3);
         lcd.print("    AQUEC");
-unsigned long tempoestabilizacao ;
 
-    } else tempoestabilizacao = basetempo10seg;
-
+  tempoestabilizacao = basetempo10seg + 6;
     
-if (sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0)  < SetDifTemperEntrSaidaFloat / 10 ){// && basetempo10seg > tempoestabilizacao + 6
+    } //else {
+      
+      Serial.print(basetempo10seg);
+      Serial.print(tempoestabilizacao);
+   // }
+    
+if (sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0)  < SetDifTemperEntrSaidaFloat / 10 && basetempo10seg > tempoestabilizacao ){// 
 
   /* code */
 lcd.setCursor(10, 3);
