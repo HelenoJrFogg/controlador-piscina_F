@@ -115,7 +115,7 @@ int SetTempoBombaDesl;
 float SetTempoBombaDeslFloat;
 int SetTempoBombaDeslEEPROM;
 
-nt SetTempoAcionBombaCirc;
+int SetTempoAcionBombaCirc;
 float SetTempoAcionBombaCircFloat;
 int SetTempoAcionBombaCircEEPROM;
 
@@ -184,6 +184,7 @@ unsigned long tempointervdeprot;       // tempo de intervalo da bomba no acionam
 
  bool DisparoProtecao;
 
+unsigned long tempoestabilizacao ;
 
 void setup(void)
 
@@ -693,14 +694,14 @@ ultimoestadobotoes = botoes ;
 
     lcd.setCursor(9, 1);
     lcd.print("Dif:");
-    lcd.print(sensor_piscina.getTempCByIndex(0) - sensor_retorno.getTempCByIndex(0));
+    lcd.print(  sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0));
          
     lcd.setCursor(0, 3);
     lcd.print(temperaturaPainel / 5);
     // lcd.print("Bomba:");
-     if (digitalRead(bomba1) == 1){
-       lcd.print("AQUECENDO");
-       } else    lcd.print(" Desligada");
+    // if (digitalRead(bomba1) == 1){
+    // lcd.print("AQUECENDO");
+    //  } else    lcd.print(" Desligada");
 
 // unsigned long stop = millis();
 
@@ -779,7 +780,7 @@ if (  temperAq >= difT){
       }
      
 
-  
+      controle_bomba_aq();
 
  
 }
@@ -946,17 +947,33 @@ Serial.println(TemperPiscEEPROM);
 
     /// Função controle da bomba aquecimento
 
-    void controle_bomba_aq(){
-      if (temperaturapiscina / 5 < SetTemperPiscFloat && temperaturaPainel >= SetTempInPainelFloat ){
+void controle_bomba_aq(){
 
-     
-        
-    } 
+      if (temperaturapiscina < SetTemperPiscFloat * 5 && temperaturaPainel >= SetTempInPainelFloat * 5 ){ 
+        lcd.setCursor(10, 3);
+        lcd.print("    AQUEC");
+unsigned long tempoestabilizacao ;
+
+    } else tempoestabilizacao = basetempo10seg;
 
     
+if (sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0)  < SetDifTemperEntrSaidaFloat / 10 ){// && basetempo10seg > tempoestabilizacao + 6
+
+  /* code */
+lcd.setCursor(10, 3);
+      lcd.print("deslig   ");
+}
+
     
-    
-  }
+
+
+}
+
+
+
+
+
+
         void controle_bomba(){
 {
   /* code */
