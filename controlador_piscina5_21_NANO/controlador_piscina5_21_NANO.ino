@@ -86,39 +86,39 @@ byte grau[8] ={ B00001100,
 //int s1;
 
 bool memupdate = LOW ;
-
+//1
 int SetTemperPiscina;
 float SetTemperPiscFloat;
 int TemperPiscEEPROM;
-
+//2
 int SetTempInPainel;
 float SetTempInPainelFloat;
 int SetTempInPainelEEPROM;
-
+//3
 int SetDifTempEntrSaida;
 float SetDifTemperEntrSaidaFloat;
 int DifTemperEntrSaidaEEPROM;
-
+//4
 int SetTemperSuperAq;
 float SetTemperSuperAqfloat;
 int SetTemperSuperAqEEPROM;
-
+//5
 int SetTemperDegelo;
 float SetTemperDegeloFloat;
 int SetTemperDegeloEEPROM;
-
+//6
 int SetTempoAcionBomba;
 float SetTempoAcionBombaFloat;
 int SetTempoAcionBombaEEPROM;
-
+//7
 int SetTempoBombaDesl;
 float SetTempoBombaDeslFloat;
 int SetTempoBombaDeslEEPROM;
-
+//8
 int SetTempoAcionBombaCirc;
 float SetTempoAcionBombaCircFloat;
 int SetTempoAcionBombaCircEEPROM;
-
+//9
 int SetTempoBombaCircDesl;
 float SetTempoBombaCircDeslFloat;
 int SetTempoBombaCircDeslEEPROM;
@@ -242,6 +242,8 @@ delay(500);
   SetTemperDegeloEEPROM = EEPROM.read(4)- 100;
   SetTempoAcionBombaEEPROM = EEPROM.read(5);
   SetTempoBombaDeslEEPROM = EEPROM.read(6);
+  SetTempoAcionBombaCircEEPROM = EEPROM.read(7);
+  SetTempoBombaCircDeslEEPROM = EEPROM.read(8);
   
   
   SetTemperPiscFloat = TemperPiscEEPROM ;
@@ -251,6 +253,8 @@ delay(500);
   SetTemperDegeloFloat = SetTemperDegeloEEPROM;
   SetTempoAcionBombaFloat = SetTempoAcionBombaEEPROM;
   SetTempoBombaDeslFloat = SetTempoBombaDeslEEPROM;
+  SetTempoAcionBombaCircFloat = SetTempoAcionBombaCircEEPROM;
+  SetTempoBombaCircDeslFloat = SetTempoBombaCircDeslEEPROM;
   
 tbstart = millis()/ 10000;
 
@@ -385,6 +389,8 @@ if ( buttonStateSet == HIGH || buttonStateUp == HIGH || buttonStateDw == HIGH){
   SetTemperDegelo = SetTemperDegeloFloat;
   SetTempoAcionBomba = SetTempoAcionBombaFloat;
   SetTempoBombaDesl = SetTempoBombaDeslFloat;
+  SetTempoAcionBombaCirc = SetTempoAcionBombaCircFloat;
+  SetTempoBombaCircDesl = SetTempoBombaCircDeslFloat;
   
      
      atualizaeeprom();//funcao atualiza memoria
@@ -421,7 +427,7 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 1000 ) ) {
         lcd.clear();
          }
         
-    if (contador > 7)    {
+    if (contador > 9)    {
       contador = 1;
       }
      
@@ -558,7 +564,7 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 1000 ) ) {
            lcd.setCursor(0, 0);
            lcd.print("6 Tempo de Acionamen");
             lcd.setCursor(0, 1);
-           lcd.print("da Bomba do");
+           lcd.print("to da Bomba do");
            lcd.setCursor(0, 2);
            lcd.print("ciclo de Protecao");
            // lcd.print(SetTemperSuperAqFloat);
@@ -634,6 +640,93 @@ lcd.print(SetTempoAcionBombaFloat);
           break;
 
         
+          case 8:
+          if (buttonStateUp == HIGH && SetTempoAcionBombaCircFloat < 240){
+              SetTempoAcionBombaCircFloat = SetTempoAcionBombaCircFloat + 1;
+              }
+          if (buttonStateDw == HIGH && SetTempoAcionBombaCircFloat > 0){
+             SetTempoAcionBombaCircFloat = SetTempoAcionBombaCircFloat - 1;
+             }
+             lcd.setCursor(0, 0);
+             lcd.print("8 Tempo de Acionamen");
+              lcd.setCursor(0, 1);
+             lcd.print("to da Bomba do");
+             lcd.setCursor(0, 2);
+             lcd.print("ciclo de circulacao");
+             // lcd.print(SetTemperSuperAqFloat);
+             total = SetTempoAcionBombaCircFloat * 30;
+             horas = (total / 3600);
+             minutos = ((total - (horas * 3600)) / 60);
+             segundos = (total % 60);
+  
+                // lcd.setCursor(0, 1);
+                // lcd.print(SetTempoAcionBombaFloat);
+  
+             lcd.setCursor(2, 3);
+          if (horas < 10){
+            lcd.print("0");
+             }
+             lcd.print(horas);
+             lcd.print(":");
+             lcd.setCursor(5, 3);
+          if (minutos < 10){
+             lcd.print("0");
+             }
+             lcd.print(minutos);
+             lcd.print(":");
+             lcd.setCursor(8, 3);
+          if (segundos < 10){
+              lcd.print("0");
+              }
+              lcd.print(segundos); 
+  lcd.print(">");
+  lcd.print(SetTempoAcionBombaCircFloat);
+              
+            break;
+            
+      
+       case 9:       
+          if (buttonStateUp == HIGH && SetTempoBombaCircDeslFloat < 240){
+              SetTempoBombaCircDeslFloat = SetTempoBombaCircDeslFloat + 1;
+              }
+          if (buttonStateDw == HIGH && SetTempoBombaCircDeslFloat > 0){
+             SetTempoBombaCircDeslFloat = SetTempoBombaCircDeslFloat - 1;
+             }
+             lcd.setCursor(0, 0);
+             lcd.print("9 Tempo de intervalo");
+             lcd.setCursor(0, 1);
+             lcd.print("de Bomba desligada");
+             lcd.setCursor(1, 2);
+             lcd.print("do ciclo d circulacao");
+             // lcd.print(SetTemperSuperAqFloat);
+             total = SetTempoBombaCircDeslFloat * 30;
+             horas = (total / 3600);
+             minutos = ((total - (horas * 3600)) / 60);
+             segundos = (total % 60);
+             
+             lcd.setCursor(2, 3);
+          if (horas < 10){
+            lcd.print("0");
+             }
+             lcd.print(horas);
+             lcd.print(":");
+             lcd.setCursor(5, 3);
+          if (minutos < 10){
+             lcd.print("0");
+             }
+             lcd.print(minutos);
+             lcd.print(":");
+             lcd.setCursor(8, 3);
+          if (segundos < 10){
+              lcd.print("0");
+              }
+              lcd.print(segundos);
+              lcd.print(">");
+              lcd.print(SetTempoBombaCircDeslFloat);
+            break;
+  
+
+
 
         
       default:
@@ -911,6 +1004,14 @@ Serial.println(TemperPiscEEPROM);
       EEPROM.write(6, SetTempoBombaDesl);
       memupdate = HIGH;
       }
+      if (SetTempoAcionBombaCirc != SetTempoAcionBombaCircEEPROM){
+        EEPROM.write(7, SetTempoAcionBombaCirc);
+        memupdate = HIGH;
+        }
+    if (SetTempoBombaCircDesl != SetTempoBombaCircDeslEEPROM){
+        EEPROM.write(8, SetTempoBombaCircDesl);
+        memupdate = HIGH;
+        }
 
     if (memupdate == HIGH){
    //   EEPROM.commit();
@@ -930,6 +1031,8 @@ Serial.println(TemperPiscEEPROM);
     SetTemperDegeloEEPROM = EEPROM.read(4)- 100;
     SetTempoAcionBombaEEPROM = EEPROM.read(5);
     SetTempoBombaDeslEEPROM = EEPROM.read(6);
+    SetTempoAcionBombaCircEEPROM = EEPROM.read(7);
+    SetTempoBombaCircDeslEEPROM = EEPROM.read(8);
     
      }
     }
