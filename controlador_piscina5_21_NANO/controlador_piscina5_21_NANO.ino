@@ -165,7 +165,7 @@ boolean disparoaquecerpiscina;
 boolean placaaquecida;
 boolean difentrsaida;
 boolean circularagua;
-boolean aquecendo;
+boolean aquecendo = LOW;
 boolean circulacaodeprotecao = LOW;
 
 unsigned long tbstart;
@@ -184,8 +184,11 @@ unsigned long tempointervdeprot;       // tempo de intervalo da bomba no acionam
 
  bool DisparoProtecao;
 
-unsigned long tempoestabilizacao = 0;
+unsigned long tempoestabilizacao = 0; 
 
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void setup(void)
 
 
@@ -264,6 +267,7 @@ tbstart = millis()/ 10000;
 
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void loop(void){
     sensor_piscina.requestTemperatures();
@@ -882,7 +886,7 @@ if (  temperAq >= difT){
 /////////Fim do Loop
 
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -1048,13 +1052,15 @@ Serial.println(TemperPiscEEPROM);
     }
 
 
-    /// Função controle da bomba aquecimento
+    ////////////////////////////// Função controle da bomba aquecimento
 
 void controle_bomba_aq(){
 
       if (temperaturapiscina < SetTemperPiscFloat * 5 && temperaturaPainel >= SetTempInPainelFloat * 5 ){ 
         lcd.setCursor(10, 3);
         lcd.print("    AQUEC");
+        aquecendo = HIGH;
+        }
 
   tempoestabilizacao = basetempo10seg + 6;
     
@@ -1064,14 +1070,21 @@ void controle_bomba_aq(){
       Serial.print(tempoestabilizacao);
    // }
     
+
 if (sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0)  < SetDifTemperEntrSaidaFloat / 10 && basetempo10seg > tempoestabilizacao ){// 
 
-  /* code */
+   aquecendo = LOW;
 lcd.setCursor(10, 3);
       lcd.print("deslig   ");
 }
 
+
+ if (aquecendo == HIGH){
+
     
+    //digitalWrite(bomba1, HIGH);
+    }
+    //else digitalWrite(bomba1, LOW);
 
 
 }
@@ -1079,7 +1092,7 @@ lcd.setCursor(10, 3);
 
 
 
-
+///////////////////////////////
 
         void controle_bomba(){
 {
