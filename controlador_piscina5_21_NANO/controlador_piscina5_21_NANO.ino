@@ -1090,6 +1090,10 @@ if (aquecendo == HIGH){
 
 if (basetempo30seg > tempocirculacaoaquecimento){
 
+
+
+
+  
 }
 
 
