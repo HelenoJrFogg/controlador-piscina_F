@@ -21,7 +21,7 @@ DallasTemperature sensor_retorno(&oneWire_out_1);
 
 
 /////////////////////////////////////Botões:
-unsigned long lastDebounceTime = 0 ;
+//unsigned long lastDebounceTime = 0 ;
 
 const int ledPin = 13;      // the number of the LED pin
 int ledState = HIGH;         // the current state of the output pin
@@ -50,14 +50,14 @@ unsigned long lastDebounceTimeDw = 0;  // the last time the output pin was toggl
    //bool chamarMenu = 0;
    unsigned long tempochamarmenu = 0;
    bool estadochamarmenu;
-   unsigned long lastDebounceTimeMenu = 0;
+   //unsigned long lastDebounceTimeMenu = 0;
    bool mudancaLCD;
    unsigned long tempomenu;
    bool botoes = LOW;
    int buttonPushCounter = 0;
    unsigned long whilelastTime = 0;
    bool ultimoestadobotoes ;
-  int temporizador;
+  //int temporizador;
   
 
    
@@ -138,33 +138,33 @@ int bombafiltro = 2;// pino acionamento da bomba de filtragem.
 
 
 int contador = 0;
-boolean botaoset;
-boolean botaodw;
-boolean botaoup;
+//boolean botaoset;
+///boolean botaodw;
+//boolean botaoup;
 
 
 boolean chamadamenu = 0;
-int tempodemenu = 5000;
+//int tempodemenu = 5000;
 
 // diferença milisegundos
-unsigned long ti;
-static unsigned long tf;
-int tdif;
-static unsigned long tp1;
+//unsigned long ti;
+//static unsigned long tf;
+//int tdif;
+//static unsigned long tp1;
 
 int segundos, minutos, horas, total, total1;
 
-unsigned long previousMillis;
-const long interval = 800; 
+//unsigned long previousMillis;
+//const long interval = 800; 
 
 int temperaturapiscina;
 int tempersaidaaquecedor;
 int temperaturaPainel;
 
 boolean disparoaquecerpiscina;
-boolean placaaquecida;
+//boolean placaaquecida;
 boolean difentrsaida;
-boolean circularagua;
+
 boolean aquecendo;
 boolean circulacaodeprotecao = LOW;
 
@@ -185,11 +185,16 @@ unsigned long tempointervdeprot;       // tempo de intervalo da bomba no acionam
  bool DisparoProtecao;
 
 unsigned long tempoestabilizacao = 0;
+int circularaquecimento;
+unsigned long tempocirculacaoaquecimento =2;
+int circulando = LOW;
 
-void setup(void)
 
 
-{
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void setup(void){
 
     sensor_piscina.begin();
     sensor_painel.begin();
@@ -233,7 +238,7 @@ delay(500);
        lcd.clear();
        lcd.createChar(0, grau);
     
-  tp1 = -9000;
+  //tp1 = -9000;
   
   TemperPiscEEPROM = EEPROM.read(0);
   SetTempInPainelEEPROM = EEPROM.read(1);
@@ -262,7 +267,7 @@ tbstart = millis()/ 10000;
 }
 
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 void loop(void){
@@ -394,8 +399,10 @@ if ( buttonStateSet == HIGH || buttonStateUp == HIGH || buttonStateDw == HIGH){
   
      
      atualizaeeprom();//funcao atualiza memoria
-
-  }else{
+     
+     Serial.println("                                                                                                      atualiza eeprom");
+  
+    }else{
     Serial.println(botoes);
   Serial.println("menu_on");
   
@@ -776,18 +783,18 @@ ultimoestadobotoes = botoes ;
   
 //  Serial.println(leitura0);
     lcd.setCursor(0, 0);
-    lcd.print("Pi:");
+    lcd.print("Pisc:");
     lcd.print(sensor_piscina.getTempCByIndex(0), 2);
-    lcd.setCursor(9, 0);
-    lcd.print("Aq:");
+    lcd.setCursor(11, 0);
+    lcd.print("Ret:");
     lcd.print(sensor_retorno.getTempCByIndex(0), 2);
     lcd.setCursor(0, 1);
-    lcd.print("Pa:");
+    lcd.print("Pain:");
     lcd.print(sensor_painel.getTempCByIndex(0),2);
 
-    lcd.setCursor(9, 1);
-    lcd.print("Dif:");
-    lcd.print(  sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0));
+    lcd.setCursor(11, 1);
+    lcd.print("Ganh:");
+    lcd.print(  sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0),2);
          
     lcd.setCursor(0, 3);
     lcd.print(temperaturaPainel / 5);
@@ -879,7 +886,7 @@ if (  temperAq >= difT){
 }
 
 
-/////////Fim do Loop
+/////////Fim do Loop//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -1051,27 +1058,42 @@ Serial.println(TemperPiscEEPROM);
     /// Função controle da bomba aquecimento
 
 void controle_bomba_aq(){
-
-      if (temperaturapiscina < SetTemperPiscFloat * 5 && temperaturaPainel >= SetTempInPainelFloat * 5 ){ 
+ //     if (temperaturapiscina < SetTemperPiscFloat * 5 && temperaturaPainel >= SetTempInPainelFloat * 5 ){ 
+      if (temperaturapiscina < TemperPiscEEPROM * 5 && temperaturaPainel >= SetTempInPainelEEPROM * 5 ){ 
         lcd.setCursor(10, 3);
         lcd.print("    AQUEC");
+        aquecendo = HIGH; 
+   tempoestabilizacao = basetempo10seg + 6;
 
-  tempoestabilizacao = basetempo10seg + 6;
-    
-    } //else {
+   //tempocirculacaoaquecimento = basetempo30seg; 
+  
+  } //else {
       
       Serial.print(basetempo10seg);
       Serial.print(tempoestabilizacao);
    // }
-    
-if (sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0)  < SetDifTemperEntrSaidaFloat / 10 && basetempo10seg > tempoestabilizacao ){// 
+   
+if (sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0)  < SetDifTempEntrSaida / 10 && basetempo10seg > tempoestabilizacao ){// 
+//if (sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0)  < SetDifTemperEntrSaidaFloat / 10 && basetempo10seg > tempoestabilizacao ){// 
 
   /* code */
 lcd.setCursor(10, 3);
       lcd.print("deslig   ");
+aquecendo = LOW;
 }
 
-    
+  digitalWrite(ledPin, aquecendo) ; 
+
+
+if (aquecendo == HIGH){
+
+if (basetempo30seg > tempocirculacaoaquecimento){
+
+}
+
+
+}
+
 
 
 }
