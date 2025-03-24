@@ -269,6 +269,7 @@ tbstart = millis()/ 10000;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void loop(void){
     sensor_piscina.requestTemperatures();
@@ -889,7 +890,7 @@ if (  temperAq >= difT){
 /////////Fim do Loop//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -1055,7 +1056,7 @@ Serial.println(TemperPiscEEPROM);
     }
 
 
-    /// Função controle da bomba aquecimento
+    ////////////////////////////// Função controle da bomba aquecimento
 
 void controle_bomba_aq(){
  //     if (temperaturapiscina < SetTemperPiscFloat * 5 && temperaturaPainel >= SetTempInPainelFloat * 5 ){ 
@@ -1076,7 +1077,7 @@ void controle_bomba_aq(){
 if (sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0)  < SetDifTempEntrSaida / 10 && basetempo10seg > tempoestabilizacao ){// 
 //if (sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0)  < SetDifTemperEntrSaidaFloat / 10 && basetempo10seg > tempoestabilizacao ){// 
 
-  /* code */
+   aquecendo = LOW;
 lcd.setCursor(10, 3);
       lcd.print("deslig   ");
 aquecendo = LOW;
@@ -1101,7 +1102,7 @@ if (basetempo30seg > tempocirculacaoaquecimento){
 
 
 
-
+///////////////////////////////
 
         void controle_bomba(){
 {
