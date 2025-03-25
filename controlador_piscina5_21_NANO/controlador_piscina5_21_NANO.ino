@@ -1085,18 +1085,23 @@ aquecendo = LOW;
 
   digitalWrite(ledPin, aquecendo) ; 
 
-
-if (aquecendo == HIGH){
-
-if (basetempo30seg > tempocirculacaoaquecimento){
-
-
+if (aquecendo == HIGH && circularaquecimento == LOW  ){
+  circularaquecimento = HIGH;
+  tempocirculacaoaquecimento = basetempo30seg + SetTempoBombaCircDeslFloat;
+  }
 
 
-  
-}
+if (aquecendo == HIGH && circularaquecimento == LOW  && basetempo30seg > tempocirculacaoaquecimento){
+  circularaquecimento = HIGH;
+  tempocirculacaoaquecimento = basetempo30seg;
+  SetTempoBombaCircDeslFloat;
 
+  }
 
+if (aquecendo == HIGH && circularaquecimento == HIGH && basetempo30seg > tempocirculacaoaquecimento + 2){
+  circularaquecimento = LOW;
+  tempocirculacaoaquecimento = basetempo30seg;
+SetTempoAcionBombaCircFloat;
 }
 
 
