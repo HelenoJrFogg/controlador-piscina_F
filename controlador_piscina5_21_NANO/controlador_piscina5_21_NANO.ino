@@ -1060,7 +1060,7 @@ Serial.println(TemperPiscEEPROM);
 
 void controle_bomba_aq(){
  //     if (temperaturapiscina < SetTemperPiscFloat * 5 && temperaturaPainel >= SetTempInPainelFloat * 5 ){ 
-      if (temperaturapiscina < TemperPiscEEPROM * 5 && temperaturaPainel >= SetTempInPainelEEPROM * 5 ){ 
+      if (temperaturapiscina + 3 < TemperPiscEEPROM * 5 && temperaturaPainel >= SetTempInPainelEEPROM * 5 ){ 
         lcd.setCursor(10, 3);
         lcd.print("   AQUEC");
         aquecendo = HIGH; 
@@ -1074,12 +1074,12 @@ void controle_bomba_aq(){
       Serial.print(tempoestabilizacao);
    // }
    
-if (sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0)  < SetDifTempEntrSaida / 10 && basetempo10seg > tempoestabilizacao ){// 
-//if (sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0)  < SetDifTemperEntrSaidaFloat / 10 && basetempo10seg > tempoestabilizacao ){// 
-
-   aquecendo = LOW;
+//if (sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0)  < SetDifTempEntrSaida / 10 && basetempo10seg > tempoestabilizacao ){// 
+if (aquecendo == HIGH && temperaturapiscina < TemperPiscEEPROM * 5 &&tempersaidaaquecedor - temperaturapiscina  < SetDifTempEntrSaida && basetempo10seg > tempoestabilizacao ){// 
+  
+  aquecendo = LOW;
 lcd.setCursor(9, 3);
-      lcd.print("deslig   ");
+      lcd.print(" deslig   ");
 aquecendo = LOW;
 }
 
@@ -1093,13 +1093,15 @@ if (aquecendo == HIGH && circularaquecimento == LOW && basetempo30seg >= tempoci
  lcd.setCursor(7, 3);
   lcd.print("C");
 
-}
+  }
 
 
 if (aquecendo == HIGH && circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento){
   circularaquecimento = LOW;
   tempocirculacaoaquecimento = basetempo30seg + SetTempoBombaCircDesl;
   
+  lcd.setCursor(7, 3);
+  lcd.print("  ");
 
   }
 
