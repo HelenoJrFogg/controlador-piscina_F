@@ -1083,28 +1083,28 @@ lcd.setCursor(10, 3);
 aquecendo = LOW;
 }
 
-  digitalWrite(ledPin, aquecendo) ; 
+  digitalWrite(ledPin, circularaquecimento) ; 
 
-if (aquecendo == HIGH && circularaquecimento == LOW  ){
+if (aquecendo == HIGH && circularaquecimento == LOW && basetempo30seg >= tempocirculacaoaquecimento && SetTempoAcionBombaCircFloat > 0){
   circularaquecimento = HIGH;
-  tempocirculacaoaquecimento = basetempo30seg + SetTempoBombaCircDeslFloat;
+  tempocirculacaoaquecimento = basetempo30seg + SetTempoAcionBombaCircFloat;
   }
 
 
-if (aquecendo == HIGH && circularaquecimento == LOW  && basetempo30seg > tempocirculacaoaquecimento){
-  circularaquecimento = HIGH;
-  tempocirculacaoaquecimento = basetempo30seg;
-  SetTempoBombaCircDeslFloat;
-
-  }
-
-if (aquecendo == HIGH && circularaquecimento == HIGH && basetempo30seg > tempocirculacaoaquecimento + 2){
+if (aquecendo == HIGH && circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento){
   circularaquecimento = LOW;
-  tempocirculacaoaquecimento = basetempo30seg;
-SetTempoAcionBombaCircFloat;
-}
+  tempocirculacaoaquecimento = basetempo30seg + SetTempoBombaCircDeslFloat;;
+  
 
+  }
 
+//if (aquecendo == HIGH && circularaquecimento == HIGH && basetempo30seg > tempocirculacaoaquecimento + 2){
+  //circularaquecimento = LOW;
+  //tempocirculacaoaquecimento = basetempo30seg;
+
+//}
+
+ 
 
 }
 
