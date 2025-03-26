@@ -116,11 +116,11 @@ float SetTempoBombaDeslFloat;
 int SetTempoBombaDeslEEPROM;
 //8
 int SetTempoAcionBombaCirc;
-float SetTempoAcionBombaCircFloat;
+//float SetTempoAcionBombaCircFloat;
 int SetTempoAcionBombaCircEEPROM;
 //9
 int SetTempoBombaCircDesl;
-float SetTempoBombaCircDeslFloat;
+//float SetTempoBombaCircDeslFloat;
 int SetTempoBombaCircDeslEEPROM;
 
 
@@ -258,8 +258,8 @@ delay(500);
   SetTemperDegeloFloat = SetTemperDegeloEEPROM;
   SetTempoAcionBombaFloat = SetTempoAcionBombaEEPROM;
   SetTempoBombaDeslFloat = SetTempoBombaDeslEEPROM;
-  SetTempoAcionBombaCircFloat = SetTempoAcionBombaCircEEPROM;
-  SetTempoBombaCircDeslFloat = SetTempoBombaCircDeslEEPROM;
+  //SetTempoAcionBombaCircFloat = SetTempoAcionBombaCircEEPROM;
+  //SetTempoBombaCircDeslFloat = SetTempoBombaCircDeslEEPROM;
   
 tbstart = millis()/ 10000;
 
@@ -395,8 +395,8 @@ if ( buttonStateSet == HIGH || buttonStateUp == HIGH || buttonStateDw == HIGH){
   SetTemperDegelo = SetTemperDegeloFloat;
   SetTempoAcionBomba = SetTempoAcionBombaFloat;
   SetTempoBombaDesl = SetTempoBombaDeslFloat;
-  SetTempoAcionBombaCirc = SetTempoAcionBombaCircFloat;
-  SetTempoBombaCircDesl = SetTempoBombaCircDeslFloat;
+  //SetTempoAcionBombaCirc = SetTempoAcionBombaCircFloat;
+  //SetTempoBombaCircDesl = SetTempoBombaCircDeslFloat;
   
      
      atualizaeeprom();//funcao atualiza memoria
@@ -649,11 +649,11 @@ lcd.print(SetTempoAcionBombaFloat);
 
         
           case 8:
-          if (buttonStateUp == HIGH && SetTempoAcionBombaCircFloat < 240){
-              SetTempoAcionBombaCircFloat = SetTempoAcionBombaCircFloat + 1;
+          if (buttonStateUp == HIGH && SetTempoAcionBombaCirc < 240){
+              SetTempoAcionBombaCirc = SetTempoAcionBombaCirc + 1;
               }
-          if (buttonStateDw == HIGH && SetTempoAcionBombaCircFloat > 0){
-             SetTempoAcionBombaCircFloat = SetTempoAcionBombaCircFloat - 1;
+          if (buttonStateDw == HIGH && SetTempoAcionBombaCirc > 0){
+             SetTempoAcionBombaCirc = SetTempoAcionBombaCirc - 1;
              }
              lcd.setCursor(0, 0);
              lcd.print("8 Tempo de Acionamen");
@@ -662,7 +662,7 @@ lcd.print(SetTempoAcionBombaFloat);
              lcd.setCursor(0, 2);
              lcd.print("ciclo de circulacao");
              // lcd.print(SetTemperSuperAqFloat);
-             total = SetTempoAcionBombaCircFloat * 30;
+             total = SetTempoAcionBombaCirc * 30;
              horas = (total / 3600);
              minutos = ((total - (horas * 3600)) / 60);
              segundos = (total % 60);
@@ -688,17 +688,17 @@ lcd.print(SetTempoAcionBombaFloat);
               }
               lcd.print(segundos); 
   lcd.print(">");
-  lcd.print(SetTempoAcionBombaCircFloat);
+  lcd.print(SetTempoAcionBombaCirc);
               
             break;
             
       
        case 9:       
-          if (buttonStateUp == HIGH && SetTempoBombaCircDeslFloat < 240){
-              SetTempoBombaCircDeslFloat = SetTempoBombaCircDeslFloat + 1;
+          if (buttonStateUp == HIGH && SetTempoBombaCircDesl < 240){
+              SetTempoBombaCircDesl = SetTempoBombaCircDesl + 1;
               }
-          if (buttonStateDw == HIGH && SetTempoBombaCircDeslFloat > 0){
-             SetTempoBombaCircDeslFloat = SetTempoBombaCircDeslFloat - 1;
+          if (buttonStateDw == HIGH && SetTempoBombaCircDesl > 0){
+             SetTempoBombaCircDesl = SetTempoBombaCircDesl - 1;
              }
              lcd.setCursor(0, 0);
              lcd.print("9 Tempo de intervalo");
@@ -707,7 +707,7 @@ lcd.print(SetTempoAcionBombaFloat);
              lcd.setCursor(1, 2);
              lcd.print("do ciclo d circulacao");
              // lcd.print(SetTemperSuperAqFloat);
-             total = SetTempoBombaCircDeslFloat * 30;
+             total = SetTempoBombaCircDesl * 30;
              horas = (total / 3600);
              minutos = ((total - (horas * 3600)) / 60);
              segundos = (total % 60);
@@ -730,7 +730,7 @@ lcd.print(SetTempoAcionBombaFloat);
               }
               lcd.print(segundos);
               lcd.print(">");
-              lcd.print(SetTempoBombaCircDeslFloat);
+              lcd.print(SetTempoBombaCircDesl);
             break;
   
 
@@ -1062,7 +1062,7 @@ void controle_bomba_aq(){
  //     if (temperaturapiscina < SetTemperPiscFloat * 5 && temperaturaPainel >= SetTempInPainelFloat * 5 ){ 
       if (temperaturapiscina < TemperPiscEEPROM * 5 && temperaturaPainel >= SetTempInPainelEEPROM * 5 ){ 
         lcd.setCursor(10, 3);
-        lcd.print("    AQUEC");
+        lcd.print("   AQUEC");
         aquecendo = HIGH; 
    tempoestabilizacao = basetempo10seg + 6;
 
@@ -1078,25 +1078,40 @@ if (sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0)  < Set
 //if (sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0)  < SetDifTemperEntrSaidaFloat / 10 && basetempo10seg > tempoestabilizacao ){// 
 
    aquecendo = LOW;
-lcd.setCursor(10, 3);
+lcd.setCursor(9, 3);
       lcd.print("deslig   ");
 aquecendo = LOW;
 }
 
   digitalWrite(ledPin, circularaquecimento) ; 
+  
 
-if (aquecendo == HIGH && circularaquecimento == LOW && basetempo30seg >= tempocirculacaoaquecimento && SetTempoAcionBombaCircFloat > 0){
+if (aquecendo == HIGH && circularaquecimento == LOW && basetempo30seg >= tempocirculacaoaquecimento && SetTempoAcionBombaCirc > 0){
   circularaquecimento = HIGH;
-  tempocirculacaoaquecimento = basetempo30seg + SetTempoAcionBombaCircFloat;
-  }
+  tempocirculacaoaquecimento = basetempo30seg + SetTempoAcionBombaCirc;
+  
+ lcd.setCursor(7, 3);
+  lcd.print("C");
+
+}
 
 
 if (aquecendo == HIGH && circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento){
   circularaquecimento = LOW;
-  tempocirculacaoaquecimento = basetempo30seg + SetTempoBombaCircDeslFloat;;
+  tempocirculacaoaquecimento = basetempo30seg + SetTempoBombaCircDesl;
   
 
   }
+
+  if (aquecendo == HIGH && tempersaidaaquecedor - temperaturapiscina > SetDifTempEntrSaida){
+  
+    lcd.setCursor(19, 3);
+    lcd.print("T");
+
+    }else{
+      lcd.setCursor(19, 3);
+      lcd.print(" ");
+      }
 
 //if (aquecendo == HIGH && circularaquecimento == HIGH && basetempo30seg > tempocirculacaoaquecimento + 2){
   //circularaquecimento = LOW;
@@ -1104,7 +1119,9 @@ if (aquecendo == HIGH && circularaquecimento == HIGH  && basetempo30seg >= tempo
 
 //}
 
- 
+//temperaturapiscina = 10 * sensor_piscina.getTempCByIndex(0);
+//temperaturaPainel = 10 * sensor_painel.getTempCByIndex(0);
+//tempersaidaaquecedor = 10 * sensor_retorno.getTempCByIndex(0);
 
 }
 
