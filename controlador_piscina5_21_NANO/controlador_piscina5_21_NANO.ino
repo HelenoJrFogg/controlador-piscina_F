@@ -768,10 +768,10 @@ lcd.print(SetTempoAcionBombaFloat);
        case 11:
              //lcd.clear();
              lcd.setCursor(0, 0);
-             lcd.print("11 Entrar no modo");
+             lcd.print("11 Entrar no MODO");
              lcd.setCursor(0, 1);
-             lcd.print("de TESTE saidas");
-             lcd.setCursor(1, 2);
+             lcd.print("de TESTE das Saidas");
+             lcd.setCursor(1, 3);
              lcd.print("ACEITAR: tecla >");
 
              
@@ -803,22 +803,14 @@ lcd.print(SetTempoAcionBombaFloat);
 
 
             if (botoes == HIGH)  {
-                     lcd.clear();
+                    // lcd.clear();
                      buttonPushCounter++;// if the current state is HIGH then the button went from off to on:
-                     Serial;Serial.println("on");
-                     Serial.print("number of button pushes: ");
-                      Serial.println(buttonPushCounter);
-                      //Serial.println(joyst_map);
-                      
+              
                           if (buttonPushCounter > 1) {
                              whilelastTime = millis()  - (buttonPushCounter * 100) ;  //              
                                } else whilelastTime = millis();
  
  
-
-
-
-
 
             
             if (buttonStateUp == HIGH ){
@@ -829,37 +821,16 @@ lcd.print(SetTempoAcionBombaFloat);
                   modoteste = 1;
                 }
    
-             Serial.print("                                                                                      modoteste ");
-             Serial.println(modoteste);
-
-   
-            //switch (expression)
-            //{
-            //case constant expression:
-              /* code */
-            //  break;
-            
-            //default:
-            //  break;
-           // }
-
-
-
-
- 
              
-   
-   
-           //     /*             
         switch (modoteste)
          {
          case 1:
              lcd.setCursor(0, 0);
-             lcd.print("LIgar bomba aq");
+             lcd.print("1 Bomba Aquecimento");
              lcd.setCursor(0, 1);
-             lcd.print("de TESTE saidas");
+             lcd.print("Lig/Desl: Tecla SET");
              lcd.setCursor(1, 2);
-             lcd.print("ACEITAR: tecla >");
+             lcd.print("Sair: Tecla <");
 
              if (buttonStateSet == HIGH){
               aquecendo = !aquecendo;
@@ -868,19 +839,19 @@ lcd.print(SetTempoAcionBombaFloat);
 
               if (aquecendo == HIGH){
                 lcd.setCursor(0, 3);
-                lcd.print("Bomba Aquecendo");
+                lcd.print("Bomba Aquec. Ligada");
                 } else  {
                   lcd.setCursor(0, 3);
-                  lcd.print("Bomba Desligada");
+                  lcd.print("Bomba Aq. Desligada");
                 }
                 break;
           case 2:
               lcd.setCursor(0, 0);
-              lcd.print("LIgar bomba aq 2");
-              lcd.setCursor(0, 1);
-              lcd.print("de TESTE saidas");
-              lcd.setCursor(1, 2);
-              lcd.print("ACEITAR: tecla >");
+              lcd.print("2 Bomba Aquecimento2");
+              //lcd.setCursor(0, 1);
+              //lcd.print("Lig/Desl: Tecla SET");
+              //lcd.setCursor(1, 2);
+              //lcd.print("Sair: Tecla <");
 
               if (buttonStateSet == HIGH){
                 aquecendoT = !aquecendoT;
@@ -889,47 +860,40 @@ lcd.print(SetTempoAcionBombaFloat);
 
                 if (aquecendoT == HIGH){
                   lcd.setCursor(0, 3);
-                  lcd.print("Bomba2 ligada");
+                  lcd.print("Bomba Aq2 Ligada   ");
                   } else  {
                     lcd.setCursor(0, 3);
-                    lcd.print("Bomba2 Desligada");
+                    lcd.print("Bomba Aq2 Desligada");
                   }
                   break;
      
       case 3:
           lcd.setCursor(0, 0);
-          lcd.print("LIgar bomba filtro");
-          lcd.setCursor(0, 1);
-          lcd.print("de TESTE saidas");
-          lcd.setCursor(1, 2);
-          lcd.print("ACEITAR: tecla >");
+          lcd.print("3 Bomba de Filtragem");
+          //lcd.setCursor(0, 1);
+          //lcd.print("Lig/Desl: Tecla SET");
+          //lcd.setCursor(1, 2);
+          //lcd.print("Sair: Tecla <");
+          
 
           if (buttonStateSet == HIGH){
-            aquecendoT = !aquecendoT;
+            circularaquecimento = !circularaquecimento;
             }
 
 
-            if (aquecendoT == HIGH){
+            if (circularaquecimento == HIGH){
               lcd.setCursor(0, 3);
-              lcd.print("Bomba2 ligada");
+              lcd.print("Bomba Filtro Ligada ");
               } else  {
                 lcd.setCursor(0, 3);
-                lcd.print("Bomba2 Desligada");
+                lcd.print("BombFiltro Desligada");
               }
               break;
-     
-     
-     
-     
      
      
     default:
     break;
      }//switch 
-
-
-
-
 
               if (buttonStateDw == HIGH ){
                  modotestesaidas = LOW;
@@ -949,58 +913,8 @@ lcd.print(SetTempoAcionBombaFloat);
             }
          
               }//while
-            // break;
-
-
-
-
-
-
-          /*
-          while (modotestesaidas == HIGH){
-
-            controle_botaoSet();
-            controle_botaoUp();
-            controle_botaoDw();
-          
-              if (buttonStateUp == HIGH && modoteste <= 4){
-                modoteste = modoteste + 1;
-                }
-              
-             // if (buttonStateUp == HIGH && teste > 3){
-              //    teste = 1;
-                //  }
-                
-                  switch (modoteste)
-                  {
-                  case 1:
-                      lcd.setCursor(0, 1);
-                      lcd.print("case 1");
-                      break;
-                  case 2:
-                    lcd.setCursor(0, 1);
-                    lcd.print("case 2");
-                    break;
-
-                 case 3:
-                    lcd.setCursor(0, 1);
-                    lcd.print("case 2");
-                    lcd.setCursor(0, 2);
-                    lcd.print("sair: tecla <");
-                    if (buttonStateDw == HIGH){
-                      //modotestesaidas = LOW;
-                      tempomenu = 0;
-                      }                      
-                    break;
-                  
-                  default:
-                  // break;
-                  modoteste = 0;
-                  }// switch
-
-                }//while 
-     */                        
-                break; 
+                      
+          break; 
 
         
       default:
