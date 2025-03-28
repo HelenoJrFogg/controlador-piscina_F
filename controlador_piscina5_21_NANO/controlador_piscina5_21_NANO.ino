@@ -132,9 +132,9 @@ int DifTemperEntrSaidabomba2EEPROM;
 //float tempreal;
 //float tempreal1;
 
-int bomba1 = 2;// pino acionamento da bomba de aquecimenti lento.
-int bomba2 = 2;// pino acionamento da bomba de aquecimento rapido.
-int bombafiltro = 2;// pino acionamento da bomba de filtragem.
+#define bomba1       9 // pino acionamento da bomba de aquecimenti lento.
+#define bomba2       8 // pino acionamento da bomba de aquecimento rapido.
+#define bombafiltro  7 // pino acionamento da bomba de filtragem.
 
 
 /////////////////////////////////////////
@@ -169,6 +169,7 @@ boolean disparoaquecerpiscina;
 boolean difentrsaida;
 
 boolean aquecendo;
+boolean aquecendoT;
 boolean circulacaodeprotecao = LOW;
 
 unsigned long tbstart;
@@ -191,6 +192,8 @@ unsigned long tempoestabilizacao = 0;
 int circularaquecimento;
 unsigned long tempocirculacaoaquecimento =2;
 int circulando = LOW;
+int modoteste = 0;
+int modotestesaidas ;
 
 
 
@@ -220,7 +223,7 @@ void setup(void){
   pinMode(bombafiltro, OUTPUT);
   
   Serial.begin(9600);
-  Serial.println(" ");
+  //Serial.println(" ");
   
   
  
@@ -287,21 +290,21 @@ void loop(void){
 
 
 
-    Serial.print("// piscina:");
-    Serial.print(sensor_piscina.getTempCByIndex(0));
-    Serial.print(" painel:");
-    Serial.print(sensor_painel.getTempCByIndex(0));
-    Serial.print(" retorno:");
-    Serial.print(sensor_retorno.getTempCByIndex(0),3);
+    Serial.println("// piscina:");
+   //Serial.print(sensor_piscina.getTempCByIndex(0));
+    //Serial.print(" painel:");
+    //Serial.print(sensor_painel.getTempCByIndex(0));
+    //Serial.print(" retorno:");
+    //Serial.print(sensor_retorno.getTempCByIndex(0),3);
 
 
-    Serial.print("// Set:");
-    Serial.print(buttonStateSet);
-    Serial.print("  Up");
-    Serial.print(buttonStateUp);
-    Serial.print("  Dw");
-    Serial.print(buttonStateDw);
-    Serial.print(" dif milis ");
+    //Serial.print("// Set:");
+    //Serial.print(buttonStateSet);
+    //Serial.print("  Up");
+    //Serial.print(buttonStateUp);
+    //Serial.print("  Dw");
+    //Serial.print(buttonStateDw);
+    //Serial.print(" dif milis ");
    // Serial.println((millis()-difmillis));
 //difmillis = millis();
 
@@ -311,10 +314,10 @@ void loop(void){
 if (buttonStateSet ==LOW){
   tempochamarmenu = millis();
 }
-Serial.println(tempochamarmenu);
+//Serial.println(tempochamarmenu);
 
-if ((buttonStateSet == HIGH && estadochamarmenu == LOW) && (millis()-  tempochamarmenu > 300)) {
-Serial.println(millis());
+if ((buttonStateSet == HIGH && estadochamarmenu == LOW) && (millis()-  tempochamarmenu > 100)) {
+//Serial.println(millis());
 chamadamenu = HIGH;
 contador = 0;
 } 
@@ -358,8 +361,8 @@ contador = 0;
       }
   
       //.println();
-      Serial.print("chamadamenu  ");
-     Serial.println(chamadamenu);
+      //Serial.print("chamadamenu  ");
+     //Serial.println(chamadamenu);
      // Serial.println("on");
 
 
@@ -380,12 +383,12 @@ if ( buttonStateSet == HIGH || buttonStateUp == HIGH || buttonStateDw == HIGH){
     } else botoes = LOW;
 
  
-  Serial.print("millis()");
-   Serial.print(millis());
+ // Serial.print("millis()");
+ //  Serial.print(millis());
   //Serial.println("menu_on");
   // Serial.println(botoes);
-  Serial.print("    tempomenu");
-   Serial.println(tempomenu);
+ // Serial.print("    tempomenu");
+ //  Serial.println(tempomenu);
   //Serial.println("menu_on");
 
 
@@ -407,11 +410,11 @@ if ( buttonStateSet == HIGH || buttonStateUp == HIGH || buttonStateDw == HIGH){
      
      atualizaeeprom();//funcao atualiza memoria
      
-     Serial.println("                                                                                                      atualiza eeprom");
+   //  Serial.println("                                                                                                      atualiza eeprom");
   
     }else{
-    Serial.println(botoes);
-  Serial.println("menu_on");
+ //   Serial.println(botoes);
+ // Serial.println("menu_on");
   
   }
 
@@ -441,7 +444,7 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
         lcd.clear();
          }
         
-    if (contador > 10)    {
+    if (contador > 11){
       contador = 1;
       }
      
@@ -654,7 +657,7 @@ lcd.print(SetTempoAcionBombaFloat);
           break;
 
         
-          case 8:
+       case 8:
           if (buttonStateUp == HIGH && SetTempoAcionBombaCirc < 240){
               SetTempoAcionBombaCirc = SetTempoAcionBombaCirc + 1;
               }
@@ -762,12 +765,247 @@ lcd.print(SetTempoAcionBombaFloat);
                           
               break; 
 
+       case 11:
+             //lcd.clear();
+             lcd.setCursor(0, 0);
+             lcd.print("11 Entrar no modo");
+             lcd.setCursor(0, 1);
+             lcd.print("de TESTE saidas");
+             lcd.setCursor(1, 2);
+             lcd.print("ACEITAR: tecla >");
 
+             
+             if (buttonStateUp == HIGH ){
+                 modotestesaidas = HIGH;
+              //   Serial.print("                                                                                      MODOTESTESAIDAS");
+             //Serial.println(buttonStateUp);
+                }
+             
+
+         while (modotestesaidas ==HIGH){
+
+            //leituraanalogbotoes();
+            controle_botaoSet();
+            controle_botaoUp();
+            controle_botaoDw();
+
+
+            if ( buttonStateSet == HIGH || buttonStateUp == HIGH || buttonStateDw == HIGH){
+              //tempomenu = millis();
+              botoes = HIGH;
+           } else botoes = LOW;
+
+
+
+
+
+           if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
+
+
+            if (botoes == HIGH)  {
+                     lcd.clear();
+                     buttonPushCounter++;// if the current state is HIGH then the button went from off to on:
+                     Serial;Serial.println("on");
+                     Serial.print("number of button pushes: ");
+                      Serial.println(buttonPushCounter);
+                      //Serial.println(joyst_map);
+                      
+                          if (buttonPushCounter > 1) {
+                             whilelastTime = millis()  - (buttonPushCounter * 100) ;  //              
+                               } else whilelastTime = millis();
+ 
+ 
+
+
+
+
+
+            
+            if (buttonStateUp == HIGH ){
+                modoteste = modoteste + 1;
+                }  
+
+              if (modoteste > 3){
+                  modoteste = 1;
+                }
+   
+             Serial.print("                                                                                      modoteste ");
+             Serial.println(modoteste);
+
+   
+            //switch (expression)
+            //{
+            //case constant expression:
+              /* code */
+            //  break;
+            
+            //default:
+            //  break;
+           // }
+
+
+
+
+ 
+             
+   
+   
+           //     /*             
+        switch (modoteste)
+         {
+         case 1:
+             lcd.setCursor(0, 0);
+             lcd.print("LIgar bomba aq");
+             lcd.setCursor(0, 1);
+             lcd.print("de TESTE saidas");
+             lcd.setCursor(1, 2);
+             lcd.print("ACEITAR: tecla >");
+
+             if (buttonStateSet == HIGH){
+              aquecendo = !aquecendo;
+              }
+
+
+              if (aquecendo == HIGH){
+                lcd.setCursor(0, 3);
+                lcd.print("Bomba Aquecendo");
+                } else  {
+                  lcd.setCursor(0, 3);
+                  lcd.print("Bomba Desligada");
+                }
+                break;
+          case 2:
+              lcd.setCursor(0, 0);
+              lcd.print("LIgar bomba aq 2");
+              lcd.setCursor(0, 1);
+              lcd.print("de TESTE saidas");
+              lcd.setCursor(1, 2);
+              lcd.print("ACEITAR: tecla >");
+
+              if (buttonStateSet == HIGH){
+                aquecendoT = !aquecendoT;
+                }
+
+
+                if (aquecendoT == HIGH){
+                  lcd.setCursor(0, 3);
+                  lcd.print("Bomba2 ligada");
+                  } else  {
+                    lcd.setCursor(0, 3);
+                    lcd.print("Bomba2 Desligada");
+                  }
+                  break;
+     
+      case 3:
+          lcd.setCursor(0, 0);
+          lcd.print("LIgar bomba filtro");
+          lcd.setCursor(0, 1);
+          lcd.print("de TESTE saidas");
+          lcd.setCursor(1, 2);
+          lcd.print("ACEITAR: tecla >");
+
+          if (buttonStateSet == HIGH){
+            aquecendoT = !aquecendoT;
+            }
+
+
+            if (aquecendoT == HIGH){
+              lcd.setCursor(0, 3);
+              lcd.print("Bomba2 ligada");
+              } else  {
+                lcd.setCursor(0, 3);
+                lcd.print("Bomba2 Desligada");
+              }
+              break;
+     
+     
+     
+     
+     
+     
+    default:
+    break;
+     }//switch 
+
+
+
+
+
+              if (buttonStateDw == HIGH ){
+                 modotestesaidas = LOW;
+                 chamadamenu = LOW;
+                Serial.print("                                                                                      MODOTESTESAIDAS");
+             Serial.println(buttonStateUp);
+                }
+         
+         
+                ultimoestadobotoes = botoes ; 
+
+   
+              } //fim do if
+           } else {
+            buttonPushCounter = 0;
+             // Serial.println("off");// if the current state is LOW then the button went from on to off:
+            }
+         
+              }//while
+            // break;
+
+
+
+
+
+
+          /*
+          while (modotestesaidas == HIGH){
+
+            controle_botaoSet();
+            controle_botaoUp();
+            controle_botaoDw();
+          
+              if (buttonStateUp == HIGH && modoteste <= 4){
+                modoteste = modoteste + 1;
+                }
+              
+             // if (buttonStateUp == HIGH && teste > 3){
+              //    teste = 1;
+                //  }
+                
+                  switch (modoteste)
+                  {
+                  case 1:
+                      lcd.setCursor(0, 1);
+                      lcd.print("case 1");
+                      break;
+                  case 2:
+                    lcd.setCursor(0, 1);
+                    lcd.print("case 2");
+                    break;
+
+                 case 3:
+                    lcd.setCursor(0, 1);
+                    lcd.print("case 2");
+                    lcd.setCursor(0, 2);
+                    lcd.print("sair: tecla <");
+                    if (buttonStateDw == HIGH){
+                      //modotestesaidas = LOW;
+                      tempomenu = 0;
+                      }                      
+                    break;
+                  
+                  default:
+                  // break;
+                  modoteste = 0;
+                  }// switch
+
+                }//while 
+     */                        
+                break; 
 
         
       default:
-        contador = 0;
-    }
+      contador = 0;
+    }//switch
    // return;
 
 
