@@ -196,8 +196,9 @@ int circulando = LOW;
 int modoteste = 0;
 int modotestesaidas ;
 int timerregressivo = 0;
-unsigned long tempotimerregressivo = 0;
-
+//unsigned long tempotimerregressivo = 0;
+int minutostimerregressivo = 0;
+int ultimosminutostimerregressivo = 0;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1395,6 +1396,7 @@ while (chamadamenuTimer == HIGH) {
    delay(2000);
     lcd.clear();
      chamadamenuTimer = LOW;
+    // tempomenu = millis() - 20000;
   }
   
   
@@ -1417,8 +1419,8 @@ if (buttonStateUp == HIGH ){
 if (buttonStateDw == HIGH ){
     timerregressivo = timerregressivo - 1;
     }
-    if (timerregressivo < 0) timerregressivo = 5; 
-    if (timerregressivo > 5) timerregressivo = 0;   
+    if (timerregressivo < 0) timerregressivo = 6; 
+    if (timerregressivo > 6) timerregressivo = 0;   
 
 
 
@@ -1436,57 +1438,77 @@ if (buttonStateDw == HIGH ){
   if (timerregressivo == 0){
     lcd.setCursor(2, 2);
     lcd.print(F("   DESLIGADO   "));
+    minutostimerregressivo = 0;  
     }
 
   if (timerregressivo == 1){
     lcd.setCursor(2, 2);
     lcd.print(F("   30 MINUTOS    "));
+    minutostimerregressivo = 30;  
     }
     if (timerregressivo == 2){
     lcd.setCursor(2, 2);
     lcd.print(F("   60 MINUTOS   "));
+    minutostimerregressivo = 60;  
     }
     if (timerregressivo == 3){
     lcd.setCursor(2, 2);
     lcd.print(F("   90 MINUTOS   "));
+    minutostimerregressivo = 90;  
     }
     if (timerregressivo == 4){
     lcd.setCursor(2, 2);
     lcd.print(F("   2 Horas   "));
+    minutostimerregressivo = 120;
     }
     if (timerregressivo == 5){
     lcd.setCursor(2, 2);
     lcd.print(F("   3 Horas   "));
-    }
+  minutostimerregressivo = 180;  
+  }
+  if (timerregressivo == 6){
+    lcd.setCursor(2, 2);
+    lcd.print(F("   4 Horas   "));
+  minutostimerregressivo = 240;  
+  }
     
-
-
-
-
-
-
    if (buttonStateSet == HIGH){
     //chamadamenuTimer = LOW;
     lcd.backlight();
     }// else chamadamenuTimer = HIGH;
-
-
-
-
-
-
-
   } else {
     buttonPushCounter = 0;
      // Serial.println("off");// if the current state is LOW then the button went from on to off:
     }
   ultimoestadobotoes = botoes ; 
-} // fim do if
-  
 
+} // fim do if
 
 }// fim do while
+
+if (ultimosminutostimerregressivo < basetempo30seg && minutostimerregressivo > 0){
+  minutostimerregressivo = minutostimerregressivo - 1;
+  ultimosminutostimerregressivo = basetempo30seg;
+} 
+
  
+if (timerregressivo == 0){
+
+  digitalWrite(bombafiltro, LOW);
+
+  lcd.setCursor(10, 3);
+  lcd.print(F("   DES"));
+  
+} else {
+  lcd.setCursor(17, 3);
+  lcd.print(minutostimerregressivo);
+}
+
+
+
+
+
+
 } // Fim do timer
 
        
