@@ -1,7 +1,7 @@
 
 
 ////ARDUINO NANO///
-
+//incluide <Arduino.h> 
 #include <EEPROM.h>
 
 
@@ -47,8 +47,9 @@ unsigned long lastDebounceTimeDw = 0;  // the last time the output pin was toggl
 
 
    //bool chamarMenu = 0;
-   unsigned long tempochamarmenu = 0;
-   bool estadochamarmenu;
+   unsigned long tempochamarmenuTimer = 0;
+   //bool estadochamarmenu;
+   bool estadochamarmenuTimer;
    //unsigned long lastDebounceTimeMenu = 0;
    bool mudancaLCD;
    unsigned long tempomenu;
@@ -138,7 +139,7 @@ int DifTemperEntrSaidabomba2EEPROM;
 
 /////////////////////////////////////////
 
-
+//String bombastring = "Bomba ";
 int contador = 0;
 //boolean botaoset;
 ///boolean botaodw;
@@ -146,6 +147,7 @@ int contador = 0;
 
 
 boolean chamadamenu = 0;
+boolean chamadamenuTimer = 0;
 //int tempodemenu = 5000;
 
 // diferença milisegundos
@@ -154,8 +156,8 @@ boolean chamadamenu = 0;
 //int tdif;
 //static unsigned long tp1;
 
-int segundos, minutos, horas, total, total1;
-
+//int segundos, minutos, horas, total, total1;
+int segundos, minutos, horas, total;
 //unsigned long previousMillis;
 //const long interval = 800; 
 
@@ -193,6 +195,8 @@ unsigned long tempocirculacaoaquecimento =2;
 int circulando = LOW;
 int modoteste = 0;
 int modotestesaidas ;
+int timerregressivo = 0;
+unsigned long tempotimerregressivo = 0;
 
 
 
@@ -235,11 +239,13 @@ void setup(void){
 delay(500);
      lcd.backlight();
        lcd.clear();
-       lcd.setCursor(0, 0);
-       lcd.print("CONTROLADORES ");
-       lcd.setCursor(0, 1);
-       lcd.print("FOGGIATTO V2.1");
-       delay(2000);
+       lcd.setCursor(5, 0);
+       lcd.print(F("FOGGIATTO"));
+       lcd.setCursor(3, 1);
+       lcd.print(F("CONTROLADORES"));
+       lcd.setCursor(7, 3);
+       lcd.print(F("V2.2"));
+       delay(3000);
        lcd.clear();
        lcd.createChar(0, grau);
     
@@ -287,7 +293,12 @@ void loop(void){
     controle_botaoUp();
     controle_botaoDw();
 
-
+    basetempo10seg = millis() / 10000;
+    basetempo30seg = basetempo10seg / 3;
+     //lcd.setCursor(0, 2);
+     //lcd.print(basetempo10seg);
+     //lcd.print("<10/30>");
+     //lcd.print(basetempo30seg); 
 
     //Serial.println("// piscina:");
    //Serial.print(sensor_piscina.getTempCByIndex(0));
@@ -309,13 +320,20 @@ void loop(void){
 
 
 
+/////////////MenuTimer
+
+timer();
+
+
+
+
+
+
 /////////////Menu
-if (buttonStateSet ==LOW){
-  tempochamarmenu = millis();
-}
 //Serial.println(tempochamarmenu);
 
-if ((buttonStateSet == HIGH && estadochamarmenu == LOW) && (millis()-  tempochamarmenu > 100)) {
+if (buttonStateSet == HIGH){//} && estadochamarmenu == LOW)){  // && (millis()-  tempochamarmenu > 100)) {
+//if ((buttonStateSet == HIGH && estadochamarmenu == LOW) && (millis()-  tempochamarmenu > 100)) {
 //Serial.println(millis());
 chamadamenu = HIGH;
 contador = 0;
@@ -323,13 +341,9 @@ contador = 0;
 
 
 
- basetempo10seg = millis() / 10000;
- basetempo30seg = basetempo10seg / 3;
 
- //lcd.setCursor(0, 2);
- //lcd.print(basetempo10seg);
- //lcd.print("<10/30>");
- //lcd.print(basetempo30seg); 
+
+
 
  // unsigned long start = millis();
     //int botoes;
@@ -411,11 +425,7 @@ if ( buttonStateSet == HIGH || buttonStateUp == HIGH || buttonStateDw == HIGH){
      
    //  Serial.println("                                                                                                      atualiza eeprom");
   
-    }else{
- //   Serial.println(botoes);
- // Serial.println("menu_on");
-  
-  }
+    }
 
 
 
@@ -461,16 +471,16 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
             }
             
         lcd.setCursor(0, 0);
-        lcd.print("1 Temperatura Maxima");                    
+        lcd.print(F("1 Temperatura Maxima"));                    
         lcd.setCursor(0, 1);
-        lcd.print("   de aquecimento");                    
+        lcd.print(F("   de aquecimento"));                    
         lcd.setCursor(0, 2);
-        lcd.print("    da Piscina");
+        lcd.print(F("    da Piscina"));
         lcd.setCursor(3, 3);
         lcd.print(SetTemperPiscFloat/2,1);
           lcd.setCursor(7, 3);
           lcd.write((byte)0);
-          lcd.print("  >  ");
+          lcd.print(F("  >  "));
           lcd.print(SetTemperPiscFloat);
        break; 
        
@@ -484,16 +494,16 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
             }
             
         lcd.setCursor(0, 0);
-        lcd.print("2 Temperatura Painel");                    
+        lcd.print(F("2 Temperatura Painel"));                    
         lcd.setCursor(0, 1);
-        lcd.print(" de inicio");                    
+        lcd.print(F(" de inicio"));                    
         lcd.setCursor(0, 2);
-        lcd.print(" do aquecimento");
+        lcd.print(F(" do aquecimento"));
         lcd.setCursor(3, 3);
         lcd.print(SetTempInPainelFloat/2,1);
           lcd.setCursor(7, 3);
           lcd.write((byte)0);
-          lcd.print("  >  ");
+          lcd.print(F("  >  "));
           lcd.print(SetTempInPainelFloat);
        break; 
 
@@ -506,11 +516,11 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
             SetDifTemperEntrSaidaFloat = SetDifTemperEntrSaidaFloat - 1;
             }
             lcd.setCursor(0, 0);
-            lcd.print("3 Ganho minimo de");
+            lcd.print(F("3 Ganho minimo de"));
             lcd.setCursor(0, 1);
-            lcd.print("Temperatura do");
+            lcd.print(F("Temperatura do"));
             lcd.setCursor(0, 2);
-            lcd.print(" Sistema ligado");
+            lcd.print(F(" Sistema ligado"));
             lcd.setCursor(3, 3);
             lcd.print(SetDifTemperEntrSaidaFloat/10);
             lcd.setCursor(8, 3);
@@ -529,11 +539,11 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
             SetTemperSuperAqfloat = SetTemperSuperAqfloat - 1;
             }
         lcd.setCursor(0, 0);
-        lcd.print("4 Temperatura de");
+        lcd.print(F("4 Temperatura de"));
         lcd.setCursor(0, 1);
-        lcd.print("acionam. da protecao");
+        lcd.print(F("acionam. da protecao"));
         lcd.setCursor(0, 2);
-        lcd.print("por calor do painel");
+        lcd.print(F("por calor do painel"));
         lcd.setCursor(3, 3);
         lcd.print(SetTemperSuperAqfloat /2 );
 
@@ -554,11 +564,11 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
             SetTemperDegeloFloat = SetTemperDegeloFloat - 1;
             }
             lcd.setCursor(0, 0);
-            lcd.print("5 Temperatura Protec");
+            lcd.print(F("5 Temperatura Protec"));
             lcd.setCursor(0, 1);
-            lcd.print("do Anticongelamento");
+            lcd.print(F("do Anticongelamento"));
             lcd.setCursor(0, 2);
-            lcd.print(" do Painel");
+            lcd.print(F(" do Painel"));
             lcd.setCursor(5, 3);
             lcd.print((SetTemperDegeloFloat/10) );//-10);
             lcd.setCursor(10, 3);
@@ -578,11 +588,11 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
            SetTempoAcionBombaFloat = SetTempoAcionBombaFloat - 1;
            }
            lcd.setCursor(0, 0);
-           lcd.print("6 Tempo de Acionamen");
+           lcd.print(F("6 Tempo de Acionamen"));
             lcd.setCursor(0, 1);
-           lcd.print("to da Bomba do");
+           lcd.print(F("to da Bomba do"));
            lcd.setCursor(0, 2);
-           lcd.print("ciclo de Protecao");
+           lcd.print(F("ciclo de Protecao"));
            // lcd.print(SetTemperSuperAqFloat);
            total = SetTempoAcionBombaFloat * 10;
            horas = (total / 3600);
@@ -623,11 +633,11 @@ lcd.print(SetTempoAcionBombaFloat);
            SetTempoBombaDeslFloat = SetTempoBombaDeslFloat - 1;
            }
            lcd.setCursor(0, 0);
-           lcd.print("7 Tempo de intervalo");
+           lcd.print(F("7 Tempo de intervalo"));
            lcd.setCursor(0, 1);
-           lcd.print("de Bomba desligada");
+           lcd.print(F("de Bomba desligada"));
            lcd.setCursor(1, 2);
-           lcd.print("do ciclo d protecao");
+           lcd.print(F("do ciclo d protecao"));
            // lcd.print(SetTemperSuperAqFloat);
            total = SetTempoBombaDeslFloat * 30;
            horas = (total / 3600);
@@ -664,11 +674,11 @@ lcd.print(SetTempoAcionBombaFloat);
              SetTempoAcionBombaCirc = SetTempoAcionBombaCirc - 1;
              }
              lcd.setCursor(0, 0);
-             lcd.print("8 Tempo de Acionamen");
+             lcd.print(F("8 Tempo de Acionamen"));
               lcd.setCursor(0, 1);
-             lcd.print("to da Bomba do");
+             lcd.print(F("to da Bomba do"));
              lcd.setCursor(0, 2);
-             lcd.print("ciclo de circulacao");
+             lcd.print(F("ciclo de circulacao"));
              // lcd.print(SetTemperSuperAqFloat);
              total = SetTempoAcionBombaCirc * 30;
              horas = (total / 3600);
@@ -709,11 +719,11 @@ lcd.print(SetTempoAcionBombaFloat);
              SetTempoBombaCircDesl = SetTempoBombaCircDesl - 1;
              }
              lcd.setCursor(0, 0);
-             lcd.print("9 Tempo de intervalo");
+             lcd.print(F("9 Tempo de intervalo"));
              lcd.setCursor(0, 1);
-             lcd.print("de Bomba desligada");
+             lcd.print(F("de Bomba desligada"));
              lcd.setCursor(1, 2);
-             lcd.print("do ciclo d circulacao");
+             lcd.print(F("do ciclo d circulacao"));
              // lcd.print(SetTemperSuperAqFloat);
              total = SetTempoBombaCircDesl * 30;
              horas = (total / 3600);
@@ -750,11 +760,11 @@ lcd.print(SetTempoAcionBombaFloat);
                 SetDifTemperEntrSaidabomba2Float = SetDifTemperEntrSaidabomba2Float - 1;
                 }
                 lcd.setCursor(0, 0);
-                lcd.print("10 Ganho minimo de");
+                lcd.print(F("10 Ganho minimo de"));
                 lcd.setCursor(0, 1);
-                lcd.print("Temperatura de");
+                lcd.print(F("Temperatura de"));
                 lcd.setCursor(0, 2);
-                lcd.print(" Acion. Bomba2");
+                lcd.print(F(" Acion. Bomba2"));
                 lcd.setCursor(3, 3);
                 lcd.print(SetDifTemperEntrSaidabomba2Float/10);
                 lcd.setCursor(8, 3);
@@ -766,11 +776,11 @@ lcd.print(SetTempoAcionBombaFloat);
        case 11:
              //lcd.clear();
              lcd.setCursor(0, 0);
-             lcd.print("11 Entrar no MODO");
+             lcd.print(F("11 Entrar no MODO"));
              lcd.setCursor(0, 1);
-             lcd.print("de TESTE das Saidas");
+             lcd.print(F("de TESTE das Saidas"));
              lcd.setCursor(1, 3);
-             lcd.print("ACEITAR: tecla >");
+             lcd.print(F("ACEITAR: tecla >"));
 
              
              if (buttonStateUp == HIGH ){
@@ -824,11 +834,11 @@ lcd.print(SetTempoAcionBombaFloat);
          {
          case 1:
              lcd.setCursor(0, 0);
-             lcd.print("1 Bomba Aquecimento");
+             lcd.print(F("1 Bomba Aquecimento"));
              lcd.setCursor(0, 1);
-             lcd.print("Lig/Desl: Tecla SET");
+             lcd.print(F("Lig/Desl: Tecla SET"));
              lcd.setCursor(1, 2);
-             lcd.print("Sair: Tecla <");
+             lcd.print(F("Sair: Tecla <"));
 
              if (buttonStateSet == HIGH){
               aquecendo = !aquecendo;
@@ -837,15 +847,15 @@ lcd.print(SetTempoAcionBombaFloat);
 
               if (aquecendo == HIGH){
                 lcd.setCursor(0, 3);
-                lcd.print("Bomba Aquec. Ligada");
+                lcd.print(F("Bomba Aquec. Ligada"));
                 } else  {
                   lcd.setCursor(0, 3);
-                  lcd.print("Bomba Aq. Desligada");
+                  lcd.print(F("Bomba Aq. Desligada"));
                 }
                 break;
           case 2:
               lcd.setCursor(0, 0);
-              lcd.print("2 Bomba Aquecimento2");
+              lcd.print(F("2 Bomba Aquecimento2"));
               //lcd.setCursor(0, 1);
               //lcd.print("Lig/Desl: Tecla SET");
               //lcd.setCursor(1, 2);
@@ -858,16 +868,16 @@ lcd.print(SetTempoAcionBombaFloat);
 
                 if (aquecendoT == HIGH){
                   lcd.setCursor(0, 3);
-                  lcd.print("Bomba Aq2 Ligada   ");
+                  lcd.print(F("Bomba Aq2 Ligada   "));
                   } else  {
                     lcd.setCursor(0, 3);
-                    lcd.print("Bomba Aq2 Desligada");
+                    lcd.print(F("Bomba Aq2 Desligada"));
                   }
                   break;
      
       case 3:
           lcd.setCursor(0, 0);
-          lcd.print("3 Bomba de Filtragem");
+          lcd.print(F("3 Bomba de Filtragem"));
           //lcd.setCursor(0, 1);
           //lcd.print("Lig/Desl: Tecla SET");
           //lcd.setCursor(1, 2);
@@ -881,10 +891,10 @@ lcd.print(SetTempoAcionBombaFloat);
 
             if (circularaquecimento == HIGH){
               lcd.setCursor(0, 3);
-              lcd.print("Bomba Filtro Ligada ");
+              lcd.print(F("Bomba Filtro Ligada "));
               } else  {
                 lcd.setCursor(0, 3);
-                lcd.print("BombFiltro Desligada");
+                lcd.print(F("BombFiltro Desligada"));
               }
               break;
      
@@ -966,7 +976,7 @@ ultimoestadobotoes = botoes ;
     lcd.setCursor(0, 2);
     lcd.print("Ret:");
     lcd.print(sensor_retorno.getTempCByIndex(0), 1);
-    lcd.setCursor(10, 2);
+    lcd.setCursor(9, 2);
     lcd.print("Ganho:");
     lcd.print(  sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0),2);
          
@@ -1065,7 +1075,7 @@ if (  temperAq >= difT){
 
  controle_bomba_aq();
  
- 
+  
 }
 
 
@@ -1210,7 +1220,7 @@ void  atualizaeeprom(){
          // Serial.println("atualiza memoria");
             lcd.clear();
             lcd.setCursor(0, 1);
-            lcd.print("Salvando na memoria");
+            lcd.print(F("Salvando na memoria"));
             //lcd.setCursor(0, 1);
            //lcd.print("    memoria");
         delay(3000);
@@ -1228,29 +1238,20 @@ void  atualizaeeprom(){
      }
     }
 
-    //////////Função TEMPORIZADOR/////
-    void timer (){
 
 
 
-
-
-
-    }
-
-
-    ////////////////////////////// Função controle da bomba aquecimento
+                       /// Função controle da bomba aquecimento
 
 void controle_bomba_aq(){
-   //Liga Aquecimento////////////////////////////////////////
    
+  //Liga Aquecimento   
       if (temperaturapiscina + 3 < TemperPiscEEPROM * 5 && temperaturaPainel >= SetTempInPainelEEPROM * 5 ){ 
 
         aquecendo = HIGH; 
         tempoestabilizacao = basetempo10seg + 6;  
        } 
-      
-     // Serial.print(basetempo10seg);
+         // Serial.print(basetempo10seg);
      // Serial.print(tempoestabilizacao);
    
   //Desliga Aquecimento////////////////////////////////////////   
@@ -1296,14 +1297,14 @@ if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento
   //lcd.print("  ");
   }
 
-}   // Fim controle_bomba_aq
+}   
+          // Fim controle_bomba_aq
 
 
 
 
-///////////////////////////////
-
-  void acionarSaidas(){ //Função aciona as saídas de aquecimento e filtragem
+                        //Função aciona as saídas de aquecimento e filtragem
+  void acionarSaidas(){ 
 
     if (aquecendo == HIGH){
     digitalWrite(bomba1, HIGH);
@@ -1325,9 +1326,6 @@ if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento
           lcd.print(" ");
     }
 
-
-
-
     //digitalWrite(bomba2, HIGH);
     if (circularaquecimento == HIGH){
     digitalWrite(bombafiltro, HIGH);
@@ -1339,27 +1337,156 @@ if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento
       lcd.print("         ");
       //lcd.clear();
        }   
-  }//Fim acionarSaidas
+  }
+            //Fim acionarSaidas
 
 
 
 
 
-/// Função circulaçao de proteçao
+                            /// Função circulaçao de proteçao
   void circulacaodeprot(){
-         //digitalWrite(bomba1, LOW);
-         //digitalWrite(bomba2, LOW);
-        // digitalWrite(bombafiltro, HIGH);
+
          lcd.setCursor(0, 3);
-        lcd.print("CIRCULACAO PROTECAO:");
-        Serial.println("  circulação de poroteção: ");
+        lcd.print(F("CIRCULACAO PROTECAO:"));
+        Serial.println(F("  circulação de poroteção: "));
+      
       } // Fim circulacaodeprot
 
 
 
+                              //Função TEMPORIZADOR/////
+void timer (){     
+
+      /////////////MenuTimer
+    if (buttonStateDw ==LOW){
+      tempochamarmenuTimer = millis();
+     }
+
+    if (buttonStateDw == HIGH  && (millis()-  tempochamarmenuTimer > 2000)) {
+    //Serial.println(millis());
+    chamadamenuTimer = HIGH;
+    //lcd.clear();
+    contador = 0;
+    //
+      Serial.print("tempochamarmenuTimer");
+      Serial.print(tempochamarmenuTimer);
+
+    }
 
 
 
 
+while (chamadamenuTimer == HIGH) {
+       controle_botaoSet();
+       controle_botaoUp();
+       controle_botaoDw(); 
+  
+  if ( buttonStateSet == HIGH || buttonStateUp == HIGH || buttonStateDw == HIGH){
+    tempomenu = millis();
+    botoes = HIGH;
+  } else botoes = LOW;
+
+
+  if (millis() -  tempomenu >10000 || buttonStateSet == HIGH ){ 
+   
+    lcd.setCursor(0, 3);
+    lcd.print(F("     SELECIONADO    "));
+   delay(2000);
+    lcd.clear();
+     chamadamenuTimer = LOW;
+  }
+  
+  
+  if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 800 ) ) {
+     //lcd.noBacklight();
+
+           if (botoes == HIGH)  {
+               lcd.clear();
+               buttonPushCounter++;
+              
+                  if (buttonPushCounter > 1) {
+                     whilelastTime = millis()  - (buttonPushCounter * 100) ;  //              
+                       } else whilelastTime = millis();
+
+
+if (buttonStateUp == HIGH ){
+    timerregressivo = timerregressivo + 1;
+    }
+
+if (buttonStateDw == HIGH ){
+    timerregressivo = timerregressivo - 1;
+    }
+    if (timerregressivo < 0) timerregressivo = 5; 
+    if (timerregressivo > 5) timerregressivo = 0;   
+
+
+
+
+  //lcd.clear();
+  lcd.setCursor(2, 0);
+  lcd.print("TIMER REGRESSIVO");
+  lcd.setCursor(0, 1);
+  lcd.print(timerregressivo);
+  //lcd.setCursor(0, 2);
+  //lcd.print("Saida: Tecla  ");
+  lcd.setCursor(0, 3);
+  lcd.print("  <     SET      > ");
+   
+  if (timerregressivo == 0){
+    lcd.setCursor(2, 2);
+    lcd.print(F("   DESLIGADO   "));
+    }
+
+  if (timerregressivo == 1){
+    lcd.setCursor(2, 2);
+    lcd.print(F("   30 MINUTOS    "));
+    }
+    if (timerregressivo == 2){
+    lcd.setCursor(2, 2);
+    lcd.print(F("   60 MINUTOS   "));
+    }
+    if (timerregressivo == 3){
+    lcd.setCursor(2, 2);
+    lcd.print(F("   90 MINUTOS   "));
+    }
+    if (timerregressivo == 4){
+    lcd.setCursor(2, 2);
+    lcd.print(F("   2 Horas   "));
+    }
+    if (timerregressivo == 5){
+    lcd.setCursor(2, 2);
+    lcd.print(F("   3 Horas   "));
+    }
+    
+
+
+
+
+
+
+   if (buttonStateSet == HIGH){
+    //chamadamenuTimer = LOW;
+    lcd.backlight();
+    }// else chamadamenuTimer = HIGH;
+
+
+
+
+
+
+
+  } else {
+    buttonPushCounter = 0;
+     // Serial.println("off");// if the current state is LOW then the button went from on to off:
+    }
+  ultimoestadobotoes = botoes ; 
+} // fim do if
+  
+
+
+}// fim do while
+ 
+} // Fim do timer
 
        
