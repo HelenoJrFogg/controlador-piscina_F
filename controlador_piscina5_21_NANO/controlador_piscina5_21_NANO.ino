@@ -91,38 +91,41 @@ int SetTemperPiscina;
 float SetTemperPiscFloat;
 int TemperPiscEEPROM;
 //2
+int SetModoAquecimento;
+int SetModoAquecimentoEEPROM;
+//3
 int SetTempInPainel;
 float SetTempInPainelFloat;
 int SetTempInPainelEEPROM;
-//3
+//4
 int SetDifTempEntrSaida;
 float SetDifTemperEntrSaidaFloat;
 int DifTemperEntrSaidaEEPROM;
-//4
+//5
 int SetTemperSuperAq;
 float SetTemperSuperAqfloat;
 int SetTemperSuperAqEEPROM;
-//5
+//6
 int SetTemperDegelo;
 float SetTemperDegeloFloat;
 int SetTemperDegeloEEPROM;
-//6
+//7
 int SetTempoAcionBomba;
 float SetTempoAcionBombaFloat;
 int SetTempoAcionBombaEEPROM;
-//7
+//8
 int SetTempoBombaDesl;
 float SetTempoBombaDeslFloat;
 int SetTempoBombaDeslEEPROM;
-//8
+//9
 int SetTempoAcionBombaCirc;
 //float SetTempoAcionBombaCircFloat;
 int SetTempoAcionBombaCircEEPROM;
-//9
+//10
 int SetTempoBombaCircDesl;
 //float SetTempoBombaCircDeslFloat;
 int SetTempoBombaCircDeslEEPROM;
-//10
+//11
 int SetDifTempEntrSaidabomba2;
 float SetDifTemperEntrSaidabomba2Float;
 int DifTemperEntrSaidabomba2EEPROM;
@@ -255,15 +258,16 @@ delay(500);
   //tp1 = -9000;
   
   TemperPiscEEPROM = EEPROM.read(0);
-  SetTempInPainelEEPROM = EEPROM.read(1);
-  DifTemperEntrSaidaEEPROM = EEPROM.read(2);
-  SetTemperSuperAqEEPROM = EEPROM.read(3);
-  SetTemperDegeloEEPROM = EEPROM.read(4)- 100;
-  SetTempoAcionBombaEEPROM = EEPROM.read(5);
-  SetTempoBombaDeslEEPROM = EEPROM.read(6);
-  SetTempoAcionBombaCircEEPROM = EEPROM.read(7);
-  SetTempoBombaCircDeslEEPROM = EEPROM.read(8);
-  DifTemperEntrSaidabomba2EEPROM = EEPROM.read(9);
+  SetModoAquecimentoEEPROM = EEPROM.read(1);
+  SetTempInPainelEEPROM = EEPROM.read(4);
+  DifTemperEntrSaidaEEPROM = EEPROM.read(5);
+  SetTemperSuperAqEEPROM = EEPROM.read(6);
+  SetTemperDegeloEEPROM = EEPROM.read(7)- 100;
+  SetTempoAcionBombaEEPROM = EEPROM.read(8);
+  SetTempoBombaDeslEEPROM = EEPROM.read(9);
+  SetTempoAcionBombaCircEEPROM = EEPROM.read(10);
+  SetTempoBombaCircDeslEEPROM = EEPROM.read(11);
+  DifTemperEntrSaidabomba2EEPROM = EEPROM.read(12);
   
   SetTemperPiscFloat = TemperPiscEEPROM ;
   SetTempInPainelFloat = SetTempInPainelEEPROM;
@@ -456,7 +460,7 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
         lcd.clear();
          }
         
-    if (contador > 11){
+    if (contador > 12){
       contador = 1;
       }
      
@@ -976,9 +980,11 @@ ultimoestadobotoes = botoes ;
     lcd.setCursor(4, 1);
     lcd.print("Painel:");
     lcd.print(sensor_painel.getTempCByIndex(0),1);
+    // lcd.autoscroll();
     lcd.setCursor(0, 2);
     lcd.print("Ret:");
     lcd.print(sensor_retorno.getTempCByIndex(0), 1);
+    //lcd.noAutoscroll();
     lcd.setCursor(9, 2);
     lcd.print("Ganho:");
     lcd.print(  sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0),2);
@@ -1180,39 +1186,39 @@ void  atualizaeeprom(){
       memupdate = HIGH;  
       }
       if (SetTempInPainelFloat != SetTempInPainelEEPROM){
-        EEPROM.write(1, (SetTempInPainelFloat ));
+        EEPROM.write(4, (SetTempInPainelFloat ));
         memupdate = HIGH;  
         }
    if (SetDifTempEntrSaida != DifTemperEntrSaidaEEPROM){
-      EEPROM.write(2, SetDifTempEntrSaida);
+      EEPROM.write(5, SetDifTempEntrSaida);
       memupdate = HIGH;
       } 
   if (SetTemperSuperAqEEPROM != SetTemperSuperAq){
-      EEPROM.write(3, SetTemperSuperAq);
+      EEPROM.write(6, SetTemperSuperAq);
       memupdate = HIGH;
       }
   if (SetTemperDegelo != SetTemperDegeloEEPROM){
-      EEPROM.write(4, SetTemperDegelo + 100);
+      EEPROM.write(7, SetTemperDegelo + 100);
       memupdate = HIGH;  
       }    
   if (SetTempoAcionBomba != SetTempoAcionBombaEEPROM){
-      EEPROM.write(5, SetTempoAcionBomba);
+      EEPROM.write(8, SetTempoAcionBomba);
       memupdate = HIGH;
       }
   if (SetTempoBombaDesl != SetTempoBombaDeslEEPROM){
-      EEPROM.write(6, SetTempoBombaDesl);
+      EEPROM.write(9, SetTempoBombaDesl);
       memupdate = HIGH;
       }
       if (SetTempoAcionBombaCirc != SetTempoAcionBombaCircEEPROM){
-        EEPROM.write(7, SetTempoAcionBombaCirc);
+        EEPROM.write(10, SetTempoAcionBombaCirc);
         memupdate = HIGH;
         }
     if (SetTempoBombaCircDesl != SetTempoBombaCircDeslEEPROM){
-        EEPROM.write(8, SetTempoBombaCircDesl);
+        EEPROM.write(11, SetTempoBombaCircDesl);
         memupdate = HIGH;
         }
         if (SetDifTempEntrSaidabomba2 != DifTemperEntrSaidabomba2EEPROM){
-          EEPROM.write(9, SetDifTempEntrSaidabomba2);
+          EEPROM.write(12, SetDifTempEntrSaidabomba2);
           memupdate = HIGH;
           } 
 
@@ -1229,15 +1235,15 @@ void  atualizaeeprom(){
         delay(3000);
             
     TemperPiscEEPROM = EEPROM.read(0);
-    SetTempInPainelEEPROM = EEPROM.read(1);
-    DifTemperEntrSaidaEEPROM = EEPROM.read(2);
-    SetTemperSuperAqEEPROM = EEPROM.read(3);
-    SetTemperDegeloEEPROM = EEPROM.read(4)- 100;
-    SetTempoAcionBombaEEPROM = EEPROM.read(5);
-    SetTempoBombaDeslEEPROM = EEPROM.read(6);
-    SetTempoAcionBombaCircEEPROM = EEPROM.read(7);
-    SetTempoBombaCircDeslEEPROM = EEPROM.read(8);
-    DifTemperEntrSaidabomba2EEPROM = EEPROM.read(9);
+    SetTempInPainelEEPROM = EEPROM.read(4);
+    DifTemperEntrSaidaEEPROM = EEPROM.read(5);
+    SetTemperSuperAqEEPROM = EEPROM.read(6);
+    SetTemperDegeloEEPROM = EEPROM.read(7)- 100;
+    SetTempoAcionBombaEEPROM = EEPROM.read(8);
+    SetTempoBombaDeslEEPROM = EEPROM.read(9);
+    SetTempoAcionBombaCircEEPROM = EEPROM.read(10);
+    SetTempoBombaCircDeslEEPROM = EEPROM.read(11);
+    DifTemperEntrSaidabomba2EEPROM = EEPROM.read(12);
      }
     }
 
@@ -1355,7 +1361,7 @@ if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento
 
          lcd.setCursor(0, 3);
         lcd.print(F("CIRCULACAO PROTECAO:"));
-        Serial.println(F("  circulação de poroteção: "));
+        Serial.println(F("  circulação de proteção: "));
       
       } // Fim circulacaodeprot
 
