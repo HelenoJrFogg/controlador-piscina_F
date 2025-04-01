@@ -191,6 +191,7 @@ unsigned long tempointervdeprot;       // tempo de intervalo da bomba no acionam
 
 unsigned long tempoestabilizacao = 0;
 int circularaquecimento;
+int ultimoestadocircularaquecimento;
 unsigned long tempocirculacaoaquecimento =2;
 int circulando = LOW;
 int modoteste = 0;
@@ -199,6 +200,7 @@ int timerregressivo = 0;
 //unsigned long tempotimerregressivo = 0;
 int minutostimerregressivo = 0;
 int ultimosminutostimerregressivo = 0;
+int ultimoestadotimerregressivo;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1310,11 +1312,11 @@ if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento
     if (aquecendo == HIGH){
     digitalWrite(bomba1, HIGH);
     lcd.setCursor(0, 3);
-    lcd.print("AQUECENDO");
+    lcd.print(F("AQUECENDO"));
     } else  {
       digitalWrite(bomba1, LOW);
       lcd.setCursor(0, 3);
-      lcd.print("DESLIGADO");
+      lcd.print("Aqu.Desl ");
     }
 
     if (aquecendoT == HIGH){
@@ -1326,18 +1328,21 @@ if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento
           lcd.setCursor(9, 3);
           lcd.print(" ");
     }
-
-    //digitalWrite(bomba2, HIGH);
-    if (circularaquecimento == HIGH){
+ if (circularaquecimento != ultimoestadocircularaquecimento && minutostimerregressivo == 0){
+    
+    if (circularaquecimento == HIGH ){
     digitalWrite(bombafiltro, HIGH);
-    lcd.setCursor(11, 3);
-    lcd.print("FILTRANDO");
+    lcd.setCursor(10, 3);
+    lcd.print(F(" FILTRANDO"));
     } else  {
       digitalWrite(bombafiltro, LOW);
       lcd.setCursor(11, 3);
       lcd.print("         ");
       //lcd.clear();
-       }   
+       }
+       ultimoestadocircularaquecimento = circularaquecimento;
+   }
+
   }
             //Fim acionarSaidas
 
@@ -1382,21 +1387,25 @@ while (chamadamenuTimer == HIGH) {
        controle_botaoSet();
        controle_botaoUp();
        controle_botaoDw(); 
-  
-  if ( buttonStateSet == HIGH || buttonStateUp == HIGH || buttonStateDw == HIGH){
+  //if ( buttonStateSet == HIGH || buttonStateUp == HIGH || buttonStateDw == HIGH){
+  if ( buttonStateUp == HIGH || buttonStateDw == HIGH){
     tempomenu = millis();
     botoes = HIGH;
   } else botoes = LOW;
 
 
-  if (millis() -  tempomenu >10000 || buttonStateSet == HIGH ){ 
+  //if (millis() -  tempomenu >10000 || buttonStateSet == HIGH ){
+    if (millis() -  tempomenu >8000  ){ 
    
     lcd.setCursor(0, 3);
     lcd.print(F("     SELECIONADO    "));
    delay(2000);
     lcd.clear();
      chamadamenuTimer = LOW;
+     ultimoestadotimerregressivo = -1;
     // tempomenu = millis() - 20000;
+  lcd.setCursor(10, 3);
+  lcd.print(F("Filt.Lg"));
   }
   
   
@@ -1427,13 +1436,13 @@ if (buttonStateDw == HIGH ){
 
   //lcd.clear();
   lcd.setCursor(2, 0);
-  lcd.print("TIMER REGRESSIVO");
+  lcd.print(F("TIMER REGRESSIVO"));
   lcd.setCursor(0, 1);
   lcd.print(timerregressivo);
   //lcd.setCursor(0, 2);
   //lcd.print("Saida: Tecla  ");
   lcd.setCursor(0, 3);
-  lcd.print("  <     SET      > ");
+  lcd.print("  <              > ");
    
   if (timerregressivo == 0){
     lcd.setCursor(2, 2);
@@ -1444,7 +1453,7 @@ if (buttonStateDw == HIGH ){
   if (timerregressivo == 1){
     lcd.setCursor(2, 2);
     lcd.print(F("   30 MINUTOS    "));
-    minutostimerregressivo = 30;  
+    minutostimerregressivo = 5;  
     }
     if (timerregressivo == 2){
     lcd.setCursor(2, 2);
@@ -1486,23 +1495,34 @@ if (buttonStateDw == HIGH ){
 
 }// fim do while
 
-if (ultimosminutostimerregressivo < basetempo30seg && minutostimerregressivo > 0){
+if (ultimosminutostimerregressivo < basetempo10seg && minutostimerregressivo > 0){
+//if (ultimosminutostimerregressivo < basetempo30seg && minutostimerregressivo > 0){
   minutostimerregressivo = minutostimerregressivo - 1;
-  ultimosminutostimerregressivo = basetempo30seg;
+  ultimosminutostimerregressivo = basetempo10seg;
+  //ultimosminutostimerregressivo = basetempo30seg;
 } 
 
  
-if (timerregressivo == 0){
+if (minutostimerregressivo != ultimoestadotimerregressivo){
 
-  digitalWrite(bombafiltro, LOW);
-
-  lcd.setCursor(10, 3);
-  lcd.print(F("   DES"));
+Serial.print("minutostimerregressivo: ");
+Serial.print(minutostimerregressivo); 
+Serial.print(" ultimoestadotimerregressivo: ");
+Serial.print(ultimoestadotimerregressivo);
   
-} else {
-  lcd.setCursor(17, 3);
+  ultimoestadotimerregressivo = minutostimerregressivo;
+ lcd.setCursor(17, 3);
   lcd.print(minutostimerregressivo);
-}
+
+
+  if (minutostimerregressivo == 0){
+    lcd.setCursor(10, 3);
+    lcd.print(F("Filtr.Desl"));
+    digitalWrite(bombafiltro, LOW);
+    //lcd.clear();
+    Serial.println("Circulacao desligada: ");
+  }
+} 
 
 
 
