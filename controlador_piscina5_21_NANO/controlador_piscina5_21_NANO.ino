@@ -91,8 +91,8 @@ int SetTemperPiscina;
 float SetTemperPiscFloat;
 int TemperPiscEEPROM;
 //2
-int SetModoAquecimento;
-int SetModoAquecimentoEEPROM;
+int SetAquecimentoAutomatico;
+int SetAquecimentoAutomaticoEEPROM;
 //3
 int SetTempInPainel;
 float SetTempInPainelFloat;
@@ -258,7 +258,7 @@ delay(500);
   //tp1 = -9000;
   
   TemperPiscEEPROM = EEPROM.read(0);
-  SetModoAquecimentoEEPROM = EEPROM.read(1);
+  SetAquecimentoAutomaticoEEPROM = EEPROM.read(1);
   SetTempInPainelEEPROM = EEPROM.read(4);
   DifTemperEntrSaidaEEPROM = EEPROM.read(5);
   SetTemperSuperAqEEPROM = EEPROM.read(6);
