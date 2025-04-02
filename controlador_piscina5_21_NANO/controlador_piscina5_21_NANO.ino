@@ -91,8 +91,8 @@ int SetTemperPiscina;
 float SetTemperPiscFloat;
 int TemperPiscEEPROM;
 //2
-int SetAquecimentoAutomatico;
-int SetAquecimentoAutomaticoEEPROM;
+bool SetAquecimentoAutomatico;
+bool SetAquecimentoAutomaticoEEPROM;
 //3
 int SetTempInPainel;
 float SetTempInPainelFloat;
@@ -493,12 +493,12 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
        break;
 
        case 2:
-            if (buttonStateUp == HIGH && SetAquecimentoAutomatico < 0 ){
-              SetAquecimentoAutomatico = !SetAquecimentoAutomatico + 1;
+            if (buttonStateUp == HIGH ){
+                SetAquecimentoAutomatico = !SetAquecimentoAutomatico;
               }
             
-            if (buttonStateDw == HIGH && SetAquecimentoAutomatico > 0){
-                SetAquecimentoAutomatico = !SetAquecimentoAutomatico - 1;
+            if (buttonStateDw == HIGH){
+                SetAquecimentoAutomatico = !SetAquecimentoAutomatico ;
                 }
                 lcd.setCursor(0, 0);
                 lcd.print(F("2  AQUECIMENTO"));
@@ -1055,8 +1055,43 @@ ultimoestadobotoes = botoes ;
   //Serial.print(EEPROM.read(0));
   //Serial.print(" <<< ");
   
-  
-//  Serial.println(leitura0);
+  Serial.print("Aq Autom; ");
+  Serial.println(SetAquecimentoAutomatico);
+
+if (SetAquecimentoAutomatico == LOW && millis() > tempomenu + 10000){
+  lcd.clear();  
+  lcd.setCursor(4, 0);
+    lcd.print("MODO");
+    lcd.setCursor(2, 1);
+    lcd.print("AQUECIMENTO");
+    lcd.setCursor(2, 2);
+    lcd.print("AUTOMATICO");
+    lcd.setCursor(2, 3);
+    lcd.print("DESABILITADO");
+    
+    for (int i = 0; i < 5; i++){
+    
+    delay(150);
+    lcd.noBacklight();
+    delay(150);
+    lcd.backlight();
+
+    }
+delay(1000);
+
+
+
+    lcd.clear();
+
+    //lcd.autoscroll();
+    //lcd.setCursor(0, 3);
+    //lcd.print("Ret:");
+    //lcd.print();
+    //lcd.noAutoscroll();{
+tempomenu = millis();
+
+}else{
+
     lcd.setCursor(2, 0);
     lcd.print("Piscina: ");
     lcd.print(sensor_piscina.getTempCByIndex(0),2);
@@ -1071,7 +1106,7 @@ ultimoestadobotoes = botoes ;
     lcd.setCursor(9, 2);
     lcd.print("Ganho:");
     lcd.print(  sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0),2);
-         
+}    
     //lcd.setCursor(0, 3);
     //lcd.print(temperaturaPainel / 5);
     // lcd.print("Bomba:");
