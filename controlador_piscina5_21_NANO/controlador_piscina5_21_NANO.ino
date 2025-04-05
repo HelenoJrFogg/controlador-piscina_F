@@ -209,6 +209,11 @@ int minutostimerregressivo = 0;
 int ultimosminutostimerregressivo = 0;
 int ultimoestadotimerregressivo;
 int errosensor;
+int temperaturabaixapainel;
+int tempotimerdiario = 0;
+int ultimotimerdiario = 0;
+int tempotemperaturaminimapainel = 0;
+bool filtragemdiaria;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -518,10 +523,10 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
 
        case 3:
         if (buttonStateUp == HIGH && SetTempoTimerdiarioFloat <= 240){
-            SetTempoTimerdiarioFloat = SetTempoTimerdiarioFloat + 1;
+            SetTempoTimerdiarioFloat = SetTempoTimerdiarioFloat + 10;
             }
         if (buttonStateDw == HIGH && SetTempoTimerdiarioFloat > 0){
-           SetTempoTimerdiarioFloat = SetTempoTimerdiarioFloat - 1;
+           SetTempoTimerdiarioFloat = SetTempoTimerdiarioFloat - 10;
            }
            lcd.setCursor(0, 0);
            lcd.print(F("9 Tempo TIMER DIARIO"));
@@ -537,7 +542,10 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
 
               // lcd.setCursor(0, 1);
               // lcd.print(SetTempoAcionBombaFloat);
-
+  if (SetTempoTimerdiarioFloat == 0){
+    lcd.setCursor(0, 3);
+    lcd.print(F("DESLIGADO"));
+    } else {
            lcd.setCursor(2, 3);
         if (horas < 10){
           lcd.print("0");
@@ -555,9 +563,9 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
             lcd.print("0");
             }
             lcd.print(segundos); 
-            lcd.print(">");
+            lcd.print("   >");
              lcd.print(SetTempoTimerdiarioFloat);
-            
+          }
           break;
 
 
@@ -1696,3 +1704,31 @@ Serial.print(ultimoestadotimerregressivo);
 } // Fim do timer
 
        
+
+
+
+
+
+
+
+
+
+void timerdiario (){     
+
+if (temperaturaPainel < temperaturabaixapainel){
+
+temperaturabaixapainel = temperaturaPainel;
+tempotemperaturaminimapainel = basetempo30seg;
+
+
+}
+
+if (basetempo30seg > tempotemperaturaminimapainel + 360 && ultimotimerdiario > basetempo30seg + 1800){
+  ultimotimerdiario = basetempo30seg;
+ filtragemdiaria = HIGH;
+ 
+
+} 
+
+
+} // Fim da função timerdiario
