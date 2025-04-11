@@ -8,7 +8,7 @@
 //////////////////////Sensores
 #include <OneWire.h>
 #include <DallasTemperature.h>
-#define ONE_WIRE_BUS_PISC         3         // Pino do sensor da temperatura da piscina
+#define ONE_WIRE_BUS_PISC         6         // Pino do sensor da temperatura da piscina
 #define ONE_WIRE_BUS_PAINEL       5         // Pino do sensor do painel de aquecimento
 #define ONE_WIRE_BUS_RETORNO      4         // Pino sensor de retorno de agua
 OneWire SensorPiscina(ONE_WIRE_BUS_PISC);
@@ -28,12 +28,12 @@ int ledState = HIGH;         // the current state of the output pin
 //int analogreading;
 int debounceDelay = 50;    // the debounce time; increase if the output flickers
 
-int buttonPinSet = 11;    // the number of the pushbutton pin
+int buttonPinSet = 2;    // the number of the pushbutton pin
 int buttonStateSet;             // the current reading from the input pin
 bool lastButtonStateSet = LOW;   // the previous reading from the input pin
 unsigned long lastDebounceTimeSet = 0;  // the last time the output pin was toggled
 
-int buttonPinUp = 10;    // the number of the pushbutton pin
+int buttonPinUp = 3;    // the number of the pushbutton pin
 int buttonStateUp;             // the current reading from the input pin
 bool lastButtonStateUp = LOW;   // the previous reading from the input pin
 unsigned long lastDebounceTimeUp = 0;  // the last time the output pin was toggled
@@ -165,7 +165,7 @@ boolean chamadamenuTimer = 0;
 
 //int segundos, minutos, horas, total, total1;
 int segundos, minutos, horas, total;
-//unsigned long previousMillis;
+unsigned long previousMillis;
 //const long interval = 800; 
 
 int temperaturapiscina;
@@ -242,7 +242,7 @@ void setup(void){
   pinMode(bomba2, OUTPUT);
   pinMode(bombafiltro, OUTPUT);
   
-  //Serial.begin(9600);
+  Serial.begin(9600);
   //Serial.println(" ");
   
   
@@ -253,7 +253,7 @@ void setup(void){
 
   
      lcd.init();
-delay(500);
+delay(50);
      lcd.backlight();
        lcd.clear();
        lcd.setCursor(5, 0);
@@ -262,7 +262,7 @@ delay(500);
        lcd.print(F("CONTROLADORES"));
        lcd.setCursor(7, 3);
        lcd.print(F("V2.3"));
-       delay(3000);
+       delay(300);
        lcd.clear();
        lcd.createChar(0, grau);
     
@@ -304,6 +304,9 @@ delay(500);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void loop(void){
+ // Serial.println(millis() - previousMillis);
+  //previousMillis = millis();  
+
     sensor_piscina.requestTemperatures();
     sensor_painel.requestTemperatures();
     sensor_retorno.requestTemperatures();
@@ -322,10 +325,10 @@ void loop(void){
         basetempo10seg = basetempo10seg + 1;
     }
     basetempo30seg = basetempo10seg / 3;
-    Serial.print("basetempo10seg ");
-    Serial.println(basetempo10seg);
-    Serial.print("millis ");
-    Serial.println(millis());
+    //Serial.print("basetempo10seg ");
+    //Serial.println(basetempo10seg);
+    //Serial.print("millis ");
+    //Serial.println(millis());
      //lcd.setCursor(0, 2);
      //lcd.print(basetempo10seg);
      //lcd.print("<10/30>");
@@ -1088,15 +1091,15 @@ timerdiario ();
   //Serial.print(" <<< ");
   
   
-
+previousMillis = millis();
 
 if (temperaturapiscina < -300 || temperaturaPainel < -400 || tempersaidaaquecedor < -300 ){
 errosensor = HIGH;
 } else {
     errosensor = LOW;
 }
-Serial.print("    errosensor ");
-  Serial.println(errosensor);
+//Serial.print("    errosensor ");
+  //Serial.println(errosensor);
 
 
 if ((errosensor == HIGH || SetAquecimentoAutomatico == LOW) && basetempo10seg > tempomenu ){
@@ -1164,27 +1167,10 @@ tempomenu = basetempo10seg;
     lcd.print("Ganho:");
     lcd.print(  sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0),2);
 }    
-    //lcd.setCursor(0, 3);
-    //lcd.print(temperaturaPainel / 5);
-    // lcd.print("Bomba:");
-    // if (digitalRead(bomba1) == 1){
-    // lcd.print("AQUECENDO");
-    //  } else    lcd.print(" Desligada");
-
-// unsigned long stop = millis();
-
-    //lcd.print("CP:");
-    //lcd.print(circulacaodeprotecao);
-
-   // lcd.setCursor(12, 2);
-    //lcd.print("tp:");
-    //lcd.print(temperaturaPainel);
-
 
   
 
- if (errosensor == LOW && (temperaturaPainel /5 > SetTemperSuperAqEEPROM ) || (temperaturaPainel <= SetTemperDegeloEEPROM  ))//&& millis() > 10000) 
-     {
+ if (errosensor == LOW && temperaturaPainel /5 > SetTemperSuperAqEEPROM  || temperaturaPainel <= SetTemperDegeloEEPROM  ){
        circulacaodeprotecao = HIGH;
        circulacaodeprot();
        //Serial.println("  circulação de poroteção: ");
@@ -1194,9 +1180,9 @@ tempomenu = basetempo10seg;
 
      } else {
        circulacaodeprotecao = LOW;
-       controle_bomba_aq();
+       //controle_bomba_aq();
        acionarSaidas();
-       Serial.println("  circulacao normal: ");
+       //Serial.println("  circulacao normal: ");
      }
      
      
@@ -1256,9 +1242,17 @@ if (  temperAq >= difT){
      }
  }
    */  
-
+ 
  controle_bomba_aq();
  
+
+
+
+
+Serial.println(millis() - previousMillis);
+  
+
+
   
 }
 
@@ -1498,7 +1492,7 @@ if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento
 
 
                         //Função aciona as saídas de aquecimento e filtragem
-  void acionarSaidas(){ 
+ void acionarSaidas(){ 
 
     if (aquecendo == HIGH){
     digitalWrite(bomba1, HIGH);
@@ -1508,17 +1502,20 @@ if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento
       digitalWrite(bomba1, LOW);
       lcd.setCursor(0, 3);
       lcd.print("Aqu.Desl ");
+
+        if (aquecendoT == HIGH){
+           digitalWrite(bomba2, HIGH);
+           lcd.setCursor(9, 3);
+           lcd.print("T");
+         } else {
+            digitalWrite(bomba2, LOW);
+            lcd.setCursor(9, 3);
+            lcd.print(" ");
+         }
+
     }
 
-    if (aquecendoT == HIGH){
-    digitalWrite(bomba2, HIGH);
-    lcd.setCursor(9, 3);
-    lcd.print("T");
-     } else {
-          digitalWrite(bomba2, LOW);
-          lcd.setCursor(9, 3);
-          lcd.print(" ");
-    }
+
  if (circularaquecimento != ultimoestadocircularaquecimento ){
     
     if (circularaquecimento == HIGH ){
@@ -1551,10 +1548,10 @@ if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento
 
       if (minutostimerregressivo == 0 && filtragemdiaria == LOW && acionarbombafiltro == LOW ){
     lcd.setCursor(10, 3);
-    lcd.print(F("Filtr.Desl"));
+    lcd.print("Filtr.Desl");
     digitalWrite(bombafiltro, LOW);
     //lcd.clear();
-    Serial.println("Circulacao desligada: ");
+    //Serial.println("Circulacao desligada: ");
   }
 
       /*
@@ -1578,7 +1575,7 @@ if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento
 
          lcd.setCursor(0, 3);
         lcd.print(F("CIRCULACAO PROTECAO:"));
-        Serial.println(F("  circulação de proteção: "));
+        //Serial.println(F("  circulação de proteção: "));
       
       } // Fim circulacaodeprot
 
@@ -1724,10 +1721,10 @@ if (ultimosminutostimerregressivo < basetempo10seg && minutostimerregressivo > 0
  
 if (minutostimerregressivo != ultimoestadotimerregressivo){
 
-Serial.print("minutostimerregressivo: ");
-Serial.print(minutostimerregressivo); 
-Serial.print(" ultimoestadotimerregressivo: ");
-Serial.print(ultimoestadotimerregressivo);
+//Serial.print("minutostimerregressivo: ");
+//erial.print(minutostimerregressivo); 
+//Serial.print(" ultimoestadotimerregressivo: ");
+//Serial.print(ultimoestadotimerregressivo);
   
   ultimoestadotimerregressivo = minutostimerregressivo;
 
@@ -1743,7 +1740,7 @@ filtragemdiaria = HIGH;
     lcd.print(F("FiltroDesl"));
     //digitalWrite(bombafiltro, LOW);
     //lcd.clear();
-    Serial.println("Circulacao desligada: ");
+    //Serial.println("Circulacao desligada: ");
     filtragemdiaria = LOW;
   }
 } 
@@ -1789,12 +1786,12 @@ if (basetempo30seg > ultimotimerdiario + (SetTempoTimerdiario *2)){
 
 
 
-Serial.print("temperaturabaixapainel: ");
-Serial.print(temperaturabaixapainel);
-Serial.print(" ultimotimerdiario: ");
-Serial.print(ultimotimerdiario);  
-Serial.print(" Ult > bs30 - 1800: ");
-Serial.print(ultimotimerdiario - (basetempo30seg - 1800));
+//Serial.print("temperaturabaixapainel: ");
+//Serial.print(temperaturabaixapainel);
+//Serial.print(" ultimotimerdiario: ");
+//Serial.print(ultimotimerdiario);  
+//Serial.print(" Ult > bs30 - 1800: ");
+//Serial.print(ultimotimerdiario - (basetempo30seg - 1800));
 
 
 
