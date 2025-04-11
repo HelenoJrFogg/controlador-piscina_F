@@ -234,7 +234,7 @@ void setup(void){
    pinMode(buttonPinUp, INPUT_PULLUP);
    pinMode(buttonPinDw, INPUT_PULLUP);
 
-  
+  attachInterrupt(digitalPinToInterrupt(buttonPinSet), Fchamadamenu(), RISING);
  
 
   
@@ -1797,3 +1797,9 @@ if (basetempo30seg > ultimotimerdiario + (SetTempoTimerdiario *2)){
 
 
 } // Fim da função timerdiario
+
+
+
+void Fchamadamenu(){
+  chamadamenu = HIGH;
+}
