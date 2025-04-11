@@ -245,8 +245,6 @@ void setup(void){
   Serial.begin(9600);
   //Serial.println(" ");
   
-  
- 
 
 //EEPROM.begin(50);
 
