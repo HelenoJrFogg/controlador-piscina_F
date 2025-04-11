@@ -234,7 +234,8 @@ void setup(void){
    pinMode(buttonPinUp, INPUT_PULLUP);
    pinMode(buttonPinDw, INPUT_PULLUP);
 
-  attachInterrupt(digitalPinToInterrupt(buttonPinSet), Fchamadamenu(), RISING);
+  attachInterrupt(digitalPinToInterrupt(buttonPinSet), Fchamadamenu, FALLING);
+  attachInterrupt(digitalPinToInterrupt(buttonPinUp), timerminutos, FALLING);
  
 
   
@@ -367,7 +368,7 @@ timer();
 if (buttonStateSet == HIGH){//} && estadochamarmenu == LOW)){  // && (millis()-  tempochamarmenu > 100)) {
 //if ((buttonStateSet == HIGH && estadochamarmenu == LOW) && (millis()-  tempochamarmenu > 100)) {
 //Serial.println(millis());
-chamadamenu = HIGH;
+//chamadamenu = HIGH;
 contador = 0;
 } 
 
@@ -1802,4 +1803,8 @@ if (basetempo30seg > ultimotimerdiario + (SetTempoTimerdiario *2)){
 
 void Fchamadamenu(){
   chamadamenu = HIGH;
+}
+
+void timerminutos(){
+  minutostimerregressivo = minutostimerregressivo + 1;
 }
