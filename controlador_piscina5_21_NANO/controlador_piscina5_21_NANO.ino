@@ -1122,7 +1122,7 @@ errosensor = HIGH;
 } else {
     errosensor = LOW;
 }
-//Serial.print("    errosensor ");
+  //Serial.print("    errosensor ");
   //Serial.println(errosensor);
 
 
@@ -1260,7 +1260,7 @@ if (  temperAq >= difT){
 acionarSaidas();
 
 
-Serial.println(millis() - previousMillis);
+//Serial.println(millis() - previousMillis);
   
 
 
@@ -1411,7 +1411,7 @@ void  atualizaeeprom(){
           } 
 
     if (memupdate == HIGH){
-   //   EEPROM.commit();
+      //   EEPROM.commit();
       memupdate = LOW;
       
          // Serial.println("atualiza memoria");
@@ -1452,7 +1452,7 @@ void controle_bomba_aq(){
         tempoestabilizacao = basetempo10seg + 6;  
        } 
          // Serial.print(basetempo10seg);
-     // Serial.print(tempoestabilizacao);
+         // Serial.print(tempoestabilizacao);
    
   //Desliga Aquecimento////////////////////////////////////////   
 if (aquecendo == HIGH && basetempo10seg > tempoestabilizacao || temperaturapiscina >= TemperPiscEEPROM * 5 ){ 
@@ -1468,11 +1468,19 @@ if (aquecendo == HIGH && basetempo10seg > tempoestabilizacao || temperaturapisci
       //lcd.setCursor(9, 3);
       //lcd.print("T");
       aquecendoT = HIGH;
+     // Serial.print("AquecendoT ligado");  
     }else{
       //lcd.setCursor(9, 3);
       //lcd.print(" ");
-      aquecendoT = LOW;
+      //aquecendoT = LOW;
       }
+
+if (aquecendo == LOW || tempersaidaaquecedor - temperaturapiscina < SetDifTempEntrSaidabomba2 - 5 ){
+      aquecendoT = LOW;
+     // Serial.print("AquecendoT desligado"); 
+
+    }
+
 
   
 // Liga Circulação////////////////////////////////////////
@@ -1511,17 +1519,22 @@ if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento
     lcd.setCursor(0, 3);
     lcd.print(F("AQUECENDO"));
 
-        if (aquecendoT == HIGH){
+     if (aquecendoT == HIGH){
            digitalWrite(bomba2, HIGH);
            lcd.setCursor(9, 3);
            lcd.print("T");
-         } else {
+         }
+       
+    }
+    
+ if(aquecendo == LOW || aquecendoT == LOW){
             digitalWrite(bomba2, LOW);
             lcd.setCursor(9, 3);
             lcd.print(" ");
          }
 
-    }
+
+
     if (aquecendo == LOW && acionamentocircprot == HIGH){
       digitalWrite(bomba1, HIGH);
 
@@ -1686,25 +1699,25 @@ while (chamadamenuTimer == HIGH) {
        controle_botaoSet();
        controle_botaoUp();
        controle_botaoDw(); 
-  //if ( buttonStateSet == HIGH || buttonStateUp == HIGH || buttonStateDw == HIGH){
-  if ( buttonStateUp == HIGH || buttonStateDw == HIGH){
-    tempomenu = millis();
-    botoes = HIGH;
-  } else botoes = LOW;
+      //if ( buttonStateSet == HIGH || buttonStateUp == HIGH || buttonStateDw == HIGH){
+     if ( buttonStateUp == HIGH || buttonStateDw == HIGH){
+       tempomenu = millis();
+      botoes = HIGH;
+     } else botoes = LOW;
 
 
   //if (millis() -  tempomenu >10000 || buttonStateSet == HIGH ){
     if (millis() -  tempomenu >8000  ){ 
    
-    lcd.setCursor(0, 3);
-    lcd.print(F("     SELECIONADO    "));
-   delay(2000);
-    lcd.clear();
-     chamadamenuTimer = LOW;
-     ultimoestadotimerregressivo = -1;
-    // tempomenu = millis() - 20000;
+      lcd.setCursor(0, 3);
+      lcd.print(F("     SELECIONADO    "));
+      delay(2000);
+      lcd.clear();
+      chamadamenuTimer = LOW;
+      ultimoestadotimerregressivo = -1;
+      // tempomenu = millis() - 20000;
 
-  }
+     }
   
   
   if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 800 ) ) {
