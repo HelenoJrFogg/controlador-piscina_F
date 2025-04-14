@@ -215,6 +215,7 @@ int ultimotimerdiario = 0;
 long tempotemperaturaminimapainel = 0;
 bool filtragemdiaria;
 bool acionarbombafiltro = LOW;
+ bool acionamentocircprot = LOW;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -915,10 +916,12 @@ lcd.print(SetTempoAcionBombaFloat);
                  //Serial.print("                                                                                      MODOTESTESAIDAS");
                  //Serial.println(buttonStateUp);
                 }
-             
+             bool saidab1 = LOW;
+             bool saidab2 = LOW;
+             bool saidaf = LOW;
 
          while (modotestesaidas ==HIGH){
-
+           
             //leituraanalogbotoes();
             controle_botaoSet();
             controle_botaoUp();
@@ -945,7 +948,7 @@ lcd.print(SetTempoAcionBombaFloat);
  
 
             
-            if (buttonStateUp == HIGH ){
+            if (buttonStateUp == HIGH && buttonStateSet == LOW){
                 modoteste = modoteste + 1;
                 }  
 
@@ -965,17 +968,19 @@ lcd.print(SetTempoAcionBombaFloat);
              lcd.print(F("Sair: Tecla <"));
 
              if (buttonStateSet == HIGH){
-              aquecendo = !aquecendo;
+              saidab1 = !saidab1;
               }
 
 
-              if (aquecendo == HIGH){
+              if (saidab1 == HIGH){
                 lcd.setCursor(0, 3);
                 lcd.print(F("Bomba Aquec. Ligada"));
+                digitalWrite(bomba1, HIGH);
                 } else  {
                   lcd.setCursor(0, 3);
                   lcd.print(F("Bomba Aq. Desligada"));
-                }
+                  digitalWrite(bomba1, LOW);
+                } 
                 break;
           case 2:
               lcd.setCursor(0, 0);
@@ -986,16 +991,19 @@ lcd.print(SetTempoAcionBombaFloat);
               //lcd.print("Sair: Tecla <");
 
               if (buttonStateSet == HIGH){
-                aquecendoT = !aquecendoT;
+                saidab2 = !saidab2;
                 }
 
 
-                if (aquecendoT == HIGH){
+                if (saidab2 == HIGH){
                   lcd.setCursor(0, 3);
                   lcd.print(F("Bomba Aq2 Ligada   "));
+                  digitalWrite(bomba2, HIGH);
+                  
                   } else  {
                     lcd.setCursor(0, 3);
                     lcd.print(F("Bomba Aq2 Desligada"));
+                    digitalWrite(bomba2, LOW);
                   }
                   break;
      
@@ -1009,16 +1017,20 @@ lcd.print(SetTempoAcionBombaFloat);
           
 
           if (buttonStateSet == HIGH){
-            circularaquecimento = !circularaquecimento;
+            saidaf = !saidaf;
             }
 
 
-            if (circularaquecimento == HIGH){
+            if (saidaf == HIGH){
               lcd.setCursor(0, 3);
               lcd.print(F("Bomba Filtro Ligada "));
+              digitalWrite(bombafiltro, HIGH);
+              
+              
               } else  {
                 lcd.setCursor(0, 3);
                 lcd.print(F("BombFiltro Desligada"));
+                digitalWrite(bombafiltro, LOW);
               }
               break;
      
@@ -1030,6 +1042,10 @@ lcd.print(SetTempoAcionBombaFloat);
               if (buttonStateDw == HIGH ){
                  modotestesaidas = LOW;
                  chamadamenu = LOW;
+                 digitalWrite(bomba1, LOW);
+                 digitalWrite(bomba2, LOW); 
+                 digitalWrite(bombafiltro, LOW);
+                 
                  //interrupts();
                //   Serial.print("                                                                                      MODOTESTESAIDAS");
                //   Serial.println(buttonStateUp);
@@ -1177,23 +1193,9 @@ tempomenu = basetempo10seg;
     lcd.print(  sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0),2);
 }    
 
-  
+  circulacaodeprot();
 
- if (errosensor == LOW && temperaturaPainel /5 > SetTemperSuperAqEEPROM  || temperaturaPainel <= SetTemperDegeloEEPROM  ){
-       circulacaodeprotecao = HIGH;
-       circulacaodeprot();
-       //Serial.println("  circulação de poroteção: ");
-  //Serial.print(temperaturapiscina);
-       // lcd.setCursor(0, 3);
-       // lcd.print("CIRCULACAO PROTECAO:");
 
-     } else {
-       circulacaodeprotecao = LOW;
-       //controle_bomba_aq();
-       acionarSaidas();
-       //Serial.println("  circulacao normal: ");
-     }
-     
      
    /*
    if ((temperaturaPainel >= (SetTemperSuperAqEEPROM /5) + 40) || (temperaturaPainel * 10 < SetTemperDegeloEEPROM))
@@ -1255,7 +1257,7 @@ if (  temperAq >= difT){
  controle_bomba_aq();
  
 
-
+acionarSaidas();
 
 
 Serial.println(millis() - previousMillis);
@@ -1444,7 +1446,7 @@ void  atualizaeeprom(){
 void controle_bomba_aq(){
    
   //Liga Aquecimento   
-      if (errosensor == LOW && temperaturapiscina + 3 < TemperPiscEEPROM * 5 && temperaturaPainel >= SetTempInPainelEEPROM * 5 ){ 
+      if (errosensor == LOW && temperaturapiscina + 3 < TemperPiscEEPROM * 5 && temperaturaPainel >= SetTempInPainelEEPROM * 5 && SetAquecimentoAutomaticoEEPROM == HIGH){ 
 
         aquecendo = HIGH; 
         tempoestabilizacao = basetempo10seg + 6;  
@@ -1504,14 +1506,10 @@ if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento
                         //Função aciona as saídas de aquecimento e filtragem
  void acionarSaidas(){ 
 
-    if (aquecendo == HIGH){
+    if (aquecendo == HIGH && circulacaodeprotecao == LOW){
     digitalWrite(bomba1, HIGH);
     lcd.setCursor(0, 3);
     lcd.print(F("AQUECENDO"));
-    } else  {
-      digitalWrite(bomba1, LOW);
-      lcd.setCursor(0, 3);
-      lcd.print("Aqu.Desl ");
 
         if (aquecendoT == HIGH){
            digitalWrite(bomba2, HIGH);
@@ -1524,7 +1522,39 @@ if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento
          }
 
     }
+    if (aquecendo == LOW && acionamentocircprot == HIGH){
+      digitalWrite(bomba1, HIGH);
 
+      lcd.setCursor(0, 3);
+      lcd.print(F("CIRCULACAO PROTECAO"));
+
+
+
+    }
+
+
+
+if (aquecendo == LOW && acionamentocircprot == LOW  ){
+    digitalWrite(bomba1, LOW);
+    lcd.setCursor(0, 3);
+    lcd.print("Aqu.Desl ");
+    }
+
+
+
+
+
+
+/*
+     else  {
+      digitalWrite(bomba1, LOW);
+      lcd.setCursor(0, 3);
+      lcd.print("Aqu.Desl ");
+
+
+
+    }
+*/
 
  if (circularaquecimento != ultimoestadocircularaquecimento ){
     
@@ -1557,11 +1587,13 @@ if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento
       } 
 
       if (minutostimerregressivo == 0 && filtragemdiaria == LOW && acionarbombafiltro == LOW ){
-    lcd.setCursor(10, 3);
-    lcd.print("FiltroDesl");
+    
     digitalWrite(bombafiltro, LOW);
-    //lcd.clear();
-    //Serial.println("Circulacao desligada: ");
+
+    if (circulacaodeprotecao == LOW){
+       lcd.setCursor(10, 3);
+       lcd.print("FiltroDesl");
+    }
   }
 
       /*
@@ -1583,8 +1615,41 @@ if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento
                             /// Função circulaçao de proteçao
   void circulacaodeprot(){
 
-         lcd.setCursor(0, 3);
-        lcd.print(F("CIRCULACAO PROTECAO:"));
+
+ if (errosensor == LOW && temperaturaPainel /5 > SetTemperSuperAqEEPROM  || temperaturaPainel <= SetTemperDegeloEEPROM  ){
+       if (circulacaodeprotecao == LOW ){
+         circulacaodeprotecao = HIGH;
+        // tempobombaacioncircprot = basetempo10seg;
+        }
+ 
+      if (digitalRead(bomba1) == LOW && basetempo10seg >= tempobombaacioncircprot){
+        acionamentocircprot = HIGH;
+        tempobombaacioncircprot = basetempo10seg + SetTempoAcionBomba;
+        
+       }
+
+
+  } else {
+       circulacaodeprotecao = LOW;
+
+
+
+         }
+
+
+
+         if (  basetempo10seg >= tempobombaacioncircprot && digitalRead(bomba1) == HIGH){
+           //digitalWrite(bomba1, LOW);
+           acionamentocircprot = LOW;
+           tempobombaacioncircprot = basetempo10seg + (SetTempoBombaDesl * 3); 
+           }
+
+    
+   
+
+
+       //  lcd.setCursor(0, 3);
+      //  lcd.print(F("CIRCULACAO PROTECAO"));
         //Serial.println(F("  circulação de proteção: "));
       
       } // Fim circulacaodeprot
@@ -1778,8 +1843,8 @@ if (minutostimerregressivo > 99){
 filtragemdiaria = HIGH;
 
   if (minutostimerregressivo == 0 ){
-    lcd.setCursor(10, 3);
-    lcd.print(F("FiltroDesl"));
+   // lcd.setCursor(10, 3);
+    //lcd.print(F("FiltroDesl"));
     //digitalWrite(bombafiltro, LOW);
     //lcd.clear();
     //Serial.println("Circulacao desligada: ");
