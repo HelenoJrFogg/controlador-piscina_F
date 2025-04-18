@@ -1519,11 +1519,11 @@ if (aquecendo == LOW && acionamentocircprot == LOW  ){
     
     digitalWrite(bombafiltro, LOW);
 
-    if (circulacaodeprotecao == LOW){
-       lcd.setCursor(10, 3);
-       lcd.print("FiltroDesl");
+      if (circulacaodeprotecao == LOW){
+         lcd.setCursor(10, 3);
+         lcd.print("FiltroDesl");
+       }
     }
-  }
 
   }
             //Fim acionarSaidas
@@ -1537,6 +1537,7 @@ if (aquecendo == LOW && acionamentocircprot == LOW  ){
 
 
  if (errosensor == LOW && temperaturaPainel /5 > SetTemperSuperAqEEPROM  || temperaturaPainel <= SetTemperDegeloEEPROM  ){
+
        if (circulacaodeprotecao == LOW ){
          circulacaodeprotecao = HIGH;
         // tempobombaacioncircprot = basetempo10seg;
@@ -1552,8 +1553,6 @@ if (aquecendo == LOW && acionamentocircprot == LOW  ){
   } else {
        circulacaodeprotecao = LOW;
 
-
-
          }
 
 
@@ -1566,7 +1565,7 @@ if (aquecendo == LOW && acionamentocircprot == LOW  ){
 
 
       
-      } // Fim circulacaodeprot
+ } // Fim circulacaodeprot
 
 
 
