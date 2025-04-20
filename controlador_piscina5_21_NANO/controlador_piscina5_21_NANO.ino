@@ -13,7 +13,7 @@ hjfsmo@gmail.com
 //////////////////////Sensores
 #include <OneWire.h>
 #include <DallasTemperature.h>
-#define ONE_WIRE_BUS_PISC         6         // Pino do sensor da temperatura da piscina
+#define ONE_WIRE_BUS_PISC         A3        // Pino do sensor da temperatura da piscina
 #define ONE_WIRE_BUS_PAINEL       5         // Pino do sensor do painel de aquecimento
 #define ONE_WIRE_BUS_RETORNO      4         // Pino sensor de retorno de agua
 OneWire SensorPiscina(ONE_WIRE_BUS_PISC);
@@ -23,7 +23,7 @@ DallasTemperature sensor_piscina(&SensorPiscina);
 DallasTemperature sensor_painel(&oneWire_out);
 DallasTemperature sensor_retorno(&oneWire_out_1);
 
-
+#define beepPin 6
 
 /////////////////////////////////////Botões:
 
@@ -178,10 +178,10 @@ unsigned long tbomba;
 unsigned long tempobombaacioncircprot; //tempo de acionamento da bomba no acionamento de proteção.
 unsigned long tempointervdeprot;       // tempo de intervalo da bomba no acionamento de proteção. 
 
- unsigned long tempo;
+ //unsigned long tempo;
 
 
- bool DisparoProtecao;
+//bool DisparoProtecao;
 
 unsigned long tempoestabilizacao = 0;
 int circularaquecimento;
@@ -201,7 +201,7 @@ int ultimotimerdiario = 0;
 unsigned long tempotemperaturaminimapainel = 0;
 bool filtragemdiaria;
 bool acionarbombafiltro = LOW;
- bool acionamentocircprot = LOW;
+bool acionamentocircprot = LOW;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -247,11 +247,47 @@ delay(50);
        lcd.print(F("CONTROLADORES"));
        lcd.setCursor(7, 3);
        lcd.print(F("V2.3"));
-       delay(200);
+       delay(2000);
        lcd.clear();
        lcd.createChar(0, grau);
-    
+    tone(beepPin, 3500, 400);
+  /*
+  tone(beepPin, 2000, 400);
+  delay(500);
+  tone(beepPin, 2200, 400);
+  delay(500);
+  tone(beepPin, 2300, 400);
+  delay(500);
+  tone(beepPin, 2400, 400);
+  delay(500);
+  tone(beepPin, 2500, 400);
+  delay(500);
 
+  tone(beepPin, 2600, 400);
+  delay(500);
+  tone(beepPin, 2700, 400);
+  delay(500);
+  tone(beepPin, 2800, 400);
+  delay(500);
+
+  tone(beepPin, 2900, 400);
+  delay(500);
+  tone(beepPin, 3000, 400);
+  delay(500);
+  tone(beepPin, 3100, 400);
+  delay(500);
+  tone(beepPin, 3200, 400);
+  delay(500);
+  tone(beepPin, 3300, 400);
+  delay(500);
+  tone(beepPin, 3400, 400);
+  delay(500);
+  tone(beepPin, 3500, 400);
+  delay(500);
+  tone(beepPin, 3600, 400);
+  delay(500);
+  tone(beepPin, 3700, 400);
+*/
   
   TemperPiscEEPROM = EEPROM.read(0);
   SetAquecimentoAutomaticoEEPROM = EEPROM.read(1);
@@ -328,6 +364,7 @@ if (buttonStateSet == HIGH){//} && estadochamarmenu == LOW)){  // && (millis()- 
 //Serial.println(millis());
 chamadamenu = HIGH;
 contador = 0;
+tone(beepPin, 2700, 800);
 } 
 
  
@@ -364,6 +401,7 @@ if ( buttonStateSet == HIGH || buttonStateUp == HIGH || buttonStateDw == HIGH){
     lcd.clear();
   chamadamenu = LOW;
   tempomenu = 0;
+ tone(beepPin, 3800, 200);
   
   SetTemperPiscina = SetTemperPiscFloat;
   SetTempInPainel = SetTempInPainelFloat;
@@ -954,6 +992,7 @@ lcd.print(SetTempoAcionBombaFloat);
 
           if (buttonStateSet == HIGH){
             saidaf = !saidaf;
+            tone(beepPin, 3700, 100);
             }
 
 
@@ -1030,6 +1069,7 @@ ultimoestadobotoes = botoes ;
 if (chamadamenu != mudancaLCD){
       lcd.clear();
       mudancaLCD = chamadamenu;
+      tone (beepPin, 2700, 400);
       }
   
 
@@ -1091,6 +1131,9 @@ if ((errosensor == HIGH || SetAquecimentoAutomaticoEEPROM == LOW) && basetempo10
     lcd.print(F("DESABILITADO"));
     }
     for (int i = 0; i < 5; i++){
+      if (errosensor == HIGH) {
+        tone(beepPin, 3700, 50);
+        }
     
     delay(150);
     lcd.noBacklight();
@@ -1249,6 +1292,9 @@ void controle_botaoSet(){
    
       if (reading != buttonStateSet) {
                buttonStateSet = reading;
+               if (buttonStateSet == HIGH){ 
+                 tone(beepPin, 2500, 100);
+                 }
 
       }
   }
@@ -1265,6 +1311,7 @@ void controle_botaoUp(){
    
       if (reading != buttonStateUp) {
                buttonStateUp = reading;
+               if (buttonStateUp == HIGH)  tone(beepPin, 2800, 50);
 
       }
   }
@@ -1280,6 +1327,7 @@ void controle_botaoDw(){
    
       if (reading != buttonStateDw) {
          buttonStateDw = reading;
+         if (buttonStateDw == HIGH)  tone(beepPin, 2600, 50);
          }
      }
   lastButtonStateDw = reading;
@@ -1354,6 +1402,7 @@ void  atualizaeeprom(){
             lcd.print(F("Salvando na memoria"));
             //lcd.setCursor(0, 1);
            //lcd.print("    memoria");
+          tone(beepPin, 3700, 2000);
         delay(3000);
         lcd.clear();
             
@@ -1589,7 +1638,7 @@ void timer (){
     //
      // Serial.print("tempochamarmenuTimer");
     //  Serial.print(tempochamarmenuTimer);
-
+     tone(beepPin, 2700, 400 );
     }
 
 
@@ -1611,11 +1660,13 @@ while (chamadamenuTimer == HIGH) {
    
       lcd.setCursor(0, 3);
       lcd.print(F("     SELECIONADO    "));
+      tone(beepPin, 3700, 2000);
       delay(2000);
       lcd.clear();
       chamadamenuTimer = LOW;
       ultimoestadotimerregressivo = -1;
       // tempomenu = millis() - 20000;
+      
 
      }
   
@@ -1750,12 +1801,10 @@ if (minutostimerregressivo > 99){
 
 
 
-
-
-
-
-
 filtragemdiaria = HIGH;
+
+
+
 
   if (minutostimerregressivo == 0 ){
    // lcd.setCursor(10, 3);
@@ -1764,7 +1813,7 @@ filtragemdiaria = HIGH;
     //lcd.clear();
     //Serial.println("Circulacao desligada: ");
     filtragemdiaria = LOW;
-  }
+   }
 //} 
 
 
@@ -1807,12 +1856,11 @@ ultimotimerdiario = basetempo30seg;
 
 //if (basetempo30seg > tempotemperaturaminimapainel  && ultimotimerdiario > basetempo30seg - 1800){
   if (basetempo30seg > tempotemperaturaminimapainel  && ultimotimerdiario > basetempo30seg - 20){
-  ultimotimerdiario = basetempo30seg;
-  temperaturabaixapainel = temperaturaPainel;
- filtragemdiaria = HIGH;
- 
+    ultimotimerdiario = basetempo30seg;
+    temperaturabaixapainel = temperaturaPainel;
+    filtragemdiaria = HIGH;
+   } 
 
-} 
 if (basetempo30seg > ultimotimerdiario + (SetTempoTimerdiario *2)){
   filtragemdiaria = LOW;
 }
@@ -1845,16 +1893,18 @@ void Fchamadamenu(){
   //delay(200);
   //noInterrupts();
   tempomenu = millis();
-}
+  tone(beepPin, 2700, 50);
+ }
 
 void timerminutos(){
  // minutostimerregressivo = minutostimerregressivo + 1;
   
 buttonStateUp = HIGH;
-if (chamadamenu == LOW){
+tone(beepPin, 2700, 50);
   
-
-if (minutostimerregressivo == 0){
+if (chamadamenu == LOW){
+ 
+   if (minutostimerregressivo == 0){
        minutostimerregressivo = minutostimerregressivo + 2;
       } else minutostimerregressivo = minutostimerregressivo + 1;
 //delay(100);
