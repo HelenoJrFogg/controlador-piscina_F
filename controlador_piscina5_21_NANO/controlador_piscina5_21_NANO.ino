@@ -250,7 +250,7 @@ delay(50);
        delay(2000);
        lcd.clear();
        lcd.createChar(0, grau);
-    tone(beepPin, 3500, 400);
+    tone(beepPin, 3500, 800);
   /*
   tone(beepPin, 2000, 400);
   delay(500);
@@ -339,10 +339,6 @@ void loop(void){
     basetempo30seg = basetempo10seg / 3;
    
 
-    //leituraanalogbotoes();
-    //controle_botaoSet();
-    controle_botaoUp();
-    controle_botaoDw();
 
 /////////////MenuTimer
 
@@ -351,8 +347,8 @@ timer();
 
     //leituraanalogbotoes();
     //controle_botaoSet();
-    controle_botaoUp();
-    controle_botaoDw();
+    //controle_botaoUp();
+    //controle_botaoDw();
 
 
 
@@ -367,6 +363,10 @@ contador = 0;
 tone(beepPin, 2700, 800);
 } 
 
+    //leituraanalogbotoes();
+     controle_botaoSet();
+     controle_botaoUp();
+     controle_botaoDw();
  
   SetTemperPiscina = TemperPiscEEPROM;
   SetAquecimentoAutomatico = SetAquecimentoAutomaticoEEPROM;
@@ -511,7 +511,7 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
                break;  
 
 
-       case 3:
+    case 3:
         if (buttonStateUp == HIGH && SetTempoTimerdiario <= 240){
             SetTempoTimerdiario = SetTempoTimerdiario + 5;
             }
@@ -562,7 +562,7 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
 
 
 
-case 4:
+  case 4:
             if (buttonStateUp == HIGH && SetDifTemperEntrSaidabomba2Float <= 99){
               SetDifTemperEntrSaidabomba2Float = SetDifTemperEntrSaidabomba2Float + 1;
               }
@@ -586,7 +586,7 @@ case 4:
 
 
        
-       case 5:
+   case 5:
         if (buttonStateUp == HIGH && SetTempInPainelFloat < 100){
             SetTempInPainelFloat = SetTempInPainelFloat + 1;
             }
@@ -897,8 +897,8 @@ lcd.print(SetTempoAcionBombaFloat);
          while (modotestesaidas ==HIGH){
            
             //leituraanalogbotoes();
-            controle_botaoSet();
-            controle_botaoUp();
+            //controle_botaoSet();
+            //controle_botaoUp();
             controle_botaoDw();
 
 
@@ -1645,8 +1645,8 @@ void timer (){
 
 
 while (chamadamenuTimer == HIGH) {
-       controle_botaoSet();
-       controle_botaoUp();
+       //controle_botaoSet();
+       //controle_botaoUp();
        controle_botaoDw(); 
       //if ( buttonStateSet == HIGH || buttonStateUp == HIGH || buttonStateDw == HIGH){
      if ( buttonStateUp == HIGH || buttonStateDw == HIGH){
@@ -1791,16 +1791,7 @@ if (minutostimerregressivo > 99){
   lcd.print(F("Filt.Lg  "));
   lcd.print(minutostimerregressivo);
   }
-  //lcd.setCursor(0, 3);
-  //lcd.print("   <              > ");
-  //lcd.setCursor(0, 3);
-  //lcd.print("   <              > ");
-
-
-
-
-
-
+ 
 filtragemdiaria = HIGH;
 
 
@@ -1859,9 +1850,10 @@ ultimotimerdiario = basetempo30seg;
     ultimotimerdiario = basetempo30seg;
     temperaturabaixapainel = temperaturaPainel;
     filtragemdiaria = HIGH;
-   } 
+    minutostimerregressivo =  SetTempoTimerdiario * 2;
+  } 
 
-if (basetempo30seg > ultimotimerdiario + (SetTempoTimerdiario *2)){
+if (basetempo30seg > ultimotimerdiario + (SetTempoTimerdiario * 2)){
   filtragemdiaria = LOW;
 }
 
