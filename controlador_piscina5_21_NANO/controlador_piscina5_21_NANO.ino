@@ -250,7 +250,7 @@ delay(50);
        delay(2000);
        lcd.clear();
        lcd.createChar(0, grau);
-    tone(beepPin, 3500, 800);
+    tone(beepPin, 3000, 800);
   /*
   tone(beepPin, 2000, 400);
   delay(500);
@@ -1293,7 +1293,7 @@ void controle_botaoSet(){
       if (reading != buttonStateSet) {
                buttonStateSet = reading;
                if (buttonStateSet == HIGH){ 
-                 tone(beepPin, 2500, 100);
+                 tone(beepPin, 2400, 100);
                  }
 
       }
@@ -1311,7 +1311,9 @@ void controle_botaoUp(){
    
       if (reading != buttonStateUp) {
                buttonStateUp = reading;
-               if (buttonStateUp == HIGH)  tone(beepPin, 2800, 50);
+               if (buttonStateUp == HIGH)  {
+                tone(beepPin, 2800, 10);
+              }
 
       }
   }
@@ -1327,7 +1329,7 @@ void controle_botaoDw(){
    
       if (reading != buttonStateDw) {
          buttonStateDw = reading;
-         if (buttonStateDw == HIGH)  tone(beepPin, 2600, 50);
+         if (buttonStateDw == HIGH)  tone(beepPin, 2600, 10);
          }
      }
   lastButtonStateDw = reading;
@@ -1645,8 +1647,8 @@ void timer (){
 
 
 while (chamadamenuTimer == HIGH) {
-       //controle_botaoSet();
-       //controle_botaoUp();
+       controle_botaoSet();
+       controle_botaoUp();
        controle_botaoDw(); 
       //if ( buttonStateSet == HIGH || buttonStateUp == HIGH || buttonStateDw == HIGH){
      if ( buttonStateUp == HIGH || buttonStateDw == HIGH){
@@ -1655,8 +1657,8 @@ while (chamadamenuTimer == HIGH) {
      } else botoes = LOW;
 
 
-  //if (millis() -  tempomenu >10000 || buttonStateSet == HIGH ){
-    if (millis() -  tempomenu >8000  ){ 
+    if (millis() -  tempomenu >10000 || buttonStateSet == HIGH ){
+   // if (millis() -  tempomenu >8000  ){ 
    
       lcd.setCursor(0, 3);
       lcd.print(F("     SELECIONADO    "));
@@ -1685,10 +1687,12 @@ while (chamadamenuTimer == HIGH) {
 
 if (buttonStateUp == HIGH ){
     timerregressivo = timerregressivo + 1;
+    tone(beepPin, 2800, 50);
     }
 
 if (buttonStateDw == HIGH ){
     timerregressivo = timerregressivo - 1;
+    tone(beepPin, 2600, 50);
     }
     if (timerregressivo < 0) timerregressivo = 6; 
     if (timerregressivo > 6) timerregressivo = 0;   
@@ -1885,14 +1889,17 @@ void Fchamadamenu(){
   //delay(200);
   //noInterrupts();
   tempomenu = millis();
-  tone(beepPin, 2700, 50);
+  //tone(beepPin, 2600, 50);
  }
+
+
+ 
 
 void timerminutos(){
  // minutostimerregressivo = minutostimerregressivo + 1;
   
 buttonStateUp = HIGH;
-tone(beepPin, 2700, 50);
+//tone(beepPin, 2800, 50);
   
 if (chamadamenu == LOW){
  
