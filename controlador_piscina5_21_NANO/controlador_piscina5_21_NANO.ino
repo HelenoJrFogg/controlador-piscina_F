@@ -443,7 +443,7 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
     if (buttonStateSet == HIGH){
         contador = contador + 1;
         lcd.clear();
-        tone(beepPin, 2700, 80);
+        tone(beepPin, 2800, 80);
          }
         
     if (contador > 14){
@@ -458,7 +458,7 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
    case 1:
         if (buttonStateUp == HIGH && SetTemperPiscFloat < 80){
             SetTemperPiscFloat = SetTemperPiscFloat + 1;
-            tone(beepPin, 2800, 80);
+            tone(beepPin, 3000, 80);
             }
              
         if (buttonStateDw == HIGH && SetTemperPiscFloat > 40){
@@ -483,12 +483,18 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
        case 2:
             if (buttonStateUp == HIGH ){
                 SetAquecimentoAutomatico = !SetAquecimentoAutomatico;
-                //tone(beepPin, 2800, 80);
+                if(SetAquecimentoAutomatico == 1){
+                  tone(beepPin, 2900, 80);
+                } else tone(beepPin, 2600, 80);
               }
             
             if (buttonStateDw == HIGH){
-                SetAquecimentoAutomatico = !SetAquecimentoAutomatico ;
-                }
+                SetAquecimentoAutomatico = !SetAquecimentoAutomatico;
+                if(SetAquecimentoAutomatico == 1){
+                  tone(beepPin, 3000, 80);
+                } else tone(beepPin, 2600, 80);
+                  
+              }
                 lcd.setCursor(0, 0);
                 lcd.print(F("2  AQUECIMENTO"));
                 lcd.setCursor(0, 1);
@@ -499,11 +505,11 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
                 if (SetAquecimentoAutomatico == 1){
                   lcd.setCursor(3, 3);
                   lcd.print(F("< LIGADO >"));
-                  tone(beepPin, 2800, 80);
+                  //tone(beepPin, 2800, 80);
                 } else {
                   lcd.setCursor(3, 3);
                   lcd.print(F("< DESLIGADO >"));
-                  tone(beepPin, 2600, 80);
+                  //tone(beepPin, 2600, 80);
                 }
 
                 
@@ -520,7 +526,7 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
     case 3:
         if (buttonStateUp == HIGH && SetTempoTimerdiario <= 240){
             SetTempoTimerdiario = SetTempoTimerdiario + 5;
-            tone(beepPin, 2800, 80);
+            tone(beepPin, 3000, 80);
             }
         if (buttonStateDw == HIGH && SetTempoTimerdiario > 0){
            SetTempoTimerdiario = SetTempoTimerdiario - 5;
@@ -573,7 +579,7 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
   case 4:
             if (buttonStateUp == HIGH && SetDifTemperEntrSaidabomba2Float <= 99){
               SetDifTemperEntrSaidabomba2Float = SetDifTemperEntrSaidabomba2Float + 1;
-              tone(beepPin, 2800, 80);
+              tone(beepPin, 3000, 80);
               }
             
             if (buttonStateDw == HIGH && SetDifTemperEntrSaidabomba2Float > 0){
@@ -599,7 +605,7 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
    case 5:
         if (buttonStateUp == HIGH && SetTempInPainelFloat < 100){
             SetTempInPainelFloat = SetTempInPainelFloat + 1;
-            tone(beepPin, 2800, 80);
+            tone(beepPin, 3000, 80);
             }
              
         if (buttonStateDw == HIGH && SetTempInPainelFloat > 50){
@@ -624,7 +630,7 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
   case 6:
         if (buttonStateUp == HIGH && SetDifTemperEntrSaidaFloat <= 99){
           SetDifTemperEntrSaidaFloat = SetDifTemperEntrSaidaFloat + 1;
-          tone(beepPin, 2800, 80);
+          tone(beepPin, 3000, 80);
           }
         
         if (buttonStateDw == HIGH && SetDifTemperEntrSaidaFloat > 0){
@@ -650,7 +656,7 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
    case 7:
         if (buttonStateUp == HIGH && SetTemperSuperAqfloat < 140){
             SetTemperSuperAqfloat = SetTemperSuperAqfloat + 1;
-            tone(beepPin, 2800, 80);
+            tone(beepPin, 3000, 80);
             }
         if (buttonStateDw == HIGH && SetTemperSuperAqfloat > 100){
             SetTemperSuperAqfloat = SetTemperSuperAqfloat - 1;
@@ -676,7 +682,7 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
     case 8:
         if (buttonStateUp == HIGH && SetTemperDegeloFloat < 50){
           SetTemperDegeloFloat = SetTemperDegeloFloat + 1;
-          tone(beepPin, 2800, 80);          }
+          tone(beepPin, 3000, 80);          }
         
         if (buttonStateDw == HIGH && SetTemperDegeloFloat > -30){
             SetTemperDegeloFloat = SetTemperDegeloFloat - 1;
@@ -702,7 +708,7 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
     case 9:
         if (buttonStateUp == HIGH && SetTempoAcionBombaFloat <= 80){
             SetTempoAcionBombaFloat = SetTempoAcionBombaFloat + 1;
-            tone(beepPin, 2800, 80);
+            tone(beepPin, 3000, 80);
             }
         if (buttonStateDw == HIGH && SetTempoAcionBombaFloat > 0){
            SetTempoAcionBombaFloat = SetTempoAcionBombaFloat - 1;
@@ -749,7 +755,7 @@ lcd.print(SetTempoAcionBombaFloat);
      case 10:       
         if (buttonStateUp == HIGH && SetTempoBombaDeslFloat <= 239){
             SetTempoBombaDeslFloat = SetTempoBombaDeslFloat + 1;
-            tone(beepPin, 2800, 80);
+            tone(beepPin, 3000, 80);
             }
         if (buttonStateDw == HIGH && SetTempoBombaDeslFloat > 0){
            SetTempoBombaDeslFloat = SetTempoBombaDeslFloat - 1;
@@ -792,7 +798,7 @@ lcd.print(SetTempoAcionBombaFloat);
        case 11:
           if (buttonStateUp == HIGH && SetTempoAcionBombaCirc < 240){
               SetTempoAcionBombaCirc = SetTempoAcionBombaCirc + 1;
-              tone(beepPin, 2800, 80);
+              tone(beepPin, 3000, 80);
               }
           if (buttonStateDw == HIGH && SetTempoAcionBombaCirc > 0){
              SetTempoAcionBombaCirc = SetTempoAcionBombaCirc - 1;
@@ -839,7 +845,7 @@ lcd.print(SetTempoAcionBombaFloat);
        case 12:       
           if (buttonStateUp == HIGH && SetTempoBombaCircDesl < 240){
               SetTempoBombaCircDesl = SetTempoBombaCircDesl + 1;
-              tone(beepPin, 2800, 80);
+              tone(beepPin, 3000, 80);
               }
           if (buttonStateDw == HIGH && SetTempoBombaCircDesl > 0){
              SetTempoBombaCircDesl = SetTempoBombaCircDesl - 1;
@@ -881,7 +887,7 @@ lcd.print(SetTempoAcionBombaFloat);
        case 13:
             if (buttonStateUp == HIGH && SetDifTemperEntrSaidabomba2Float <= 99){
               SetDifTemperEntrSaidabomba2Float = SetDifTemperEntrSaidabomba2Float + 1;
-              tone(beepPin, 2800, 80);
+              tone(beepPin, 3000, 80);
               }
             
             if (buttonStateDw == HIGH && SetDifTemperEntrSaidabomba2Float > 0){
@@ -914,6 +920,7 @@ lcd.print(SetTempoAcionBombaFloat);
              
              if (buttonStateUp == HIGH ){
                  modotestesaidas = HIGH;
+                 tone(beepPin, 2800, 80);
                  //Serial.print("                                                                                      MODOTESTESAIDAS");
                  //Serial.println(buttonStateUp);
                 }
@@ -924,8 +931,8 @@ lcd.print(SetTempoAcionBombaFloat);
          while (modotestesaidas ==HIGH){
            
             //leituraanalogbotoes();
-            //controle_botaoSet();
-            //controle_botaoUp();
+            controle_botaoSet();
+            controle_botaoUp();
             controle_botaoDw();
 
 
@@ -977,11 +984,12 @@ lcd.print(SetTempoAcionBombaFloat);
 
               if (saidab1 == HIGH){
                 lcd.setCursor(0, 3);
-                lcd.print(F("Bomba Aquec. Ligada"));
+                lcd.print(F("Bomba Aquec. Ligada "));
                 digitalWrite(bomba1, HIGH);
+                tone(beepPin, 3000, 80);
                 } else  {
                   lcd.setCursor(0, 3);
-                  lcd.print(F("Bomba Aq. Desligada"));
+                  lcd.print(F("Bomba Aq. Desligada "));
                   digitalWrite(bomba1, LOW);
                 } 
                 break;
@@ -1003,7 +1011,7 @@ lcd.print(SetTempoAcionBombaFloat);
                   lcd.setCursor(0, 3);
                   lcd.print(F("Bomba Aq2 Ligada   "));
                   digitalWrite(bomba2, HIGH);
-                  
+                  tone(beepPin, 3000, 80);
                   } else  {
                     lcd.setCursor(0, 3);
                     lcd.print(F("Bomba Aq2 Desligada"));
@@ -1022,7 +1030,7 @@ lcd.print(SetTempoAcionBombaFloat);
 
           if (buttonStateSet == HIGH){
             saidaf = !saidaf;
-            tone(beepPin, 3700, 100);
+            tone(beepPin, 2800, 100);
             }
 
 
@@ -1030,7 +1038,7 @@ lcd.print(SetTempoAcionBombaFloat);
               lcd.setCursor(0, 3);
               lcd.print(F("Bomba Filtro Ligada "));
               digitalWrite(bombafiltro, HIGH);
-              
+              tone(beepPin, 3000, 80);
               
               } else  {
                 lcd.setCursor(0, 3);
@@ -1051,6 +1059,7 @@ lcd.print(SetTempoAcionBombaFloat);
                  digitalWrite(bomba2, LOW); 
                  digitalWrite(bombafiltro, LOW);
                  tone(beepPin, 2800, 200);
+                 lcd.clear();
                  //interrupts();
                //   Serial.print("                                                                                      MODOTESTESAIDAS");
                //   Serial.println(buttonStateUp);
@@ -1191,7 +1200,7 @@ tempomenu = basetempo10seg;
     lcd.print(sensor_piscina.getTempCByIndex(0),2);
     lcd.write((byte)0);
     lcd.setCursor(0, 1);
-    lcd.print("Painel:");
+    //lcd.print("Painel:");
     lcd.print(sensor_painel.getTempCByIndex(0),1);
     lcd.write((byte)0);
     // lcd.autoscroll();
@@ -1270,7 +1279,7 @@ if (  temperAq >= difT){
  controle_bomba_aq();
  
 
-acionarSaidas();
+ acionarSaidas();
 
 
 //Serial.println(millis() - previousMillis);
@@ -1365,7 +1374,7 @@ void controle_botaoDw(){
   lastButtonStateDw = reading;
 }
 
-//*/
+
 
 
 void  atualizaeeprom(){
@@ -1826,22 +1835,12 @@ if (minutostimerregressivo > 99){
   lcd.print(minutostimerregressivo);
   }
  
-filtragemdiaria = HIGH;
+//filtragemdiaria = HIGH;
 
 
-
-
-  if (minutostimerregressivo == 0 ){
-   // lcd.setCursor(10, 3);
-    //lcd.print(F("FiltroDesl"));
-    //digitalWrite(bombafiltro, LOW);
-    //lcd.clear();
-    //Serial.println("Circulacao desligada: ");
-    filtragemdiaria = LOW;
-   }
-//} 
-
-
+if (minutostimerregressivo > 0){
+  filtragemdiaria = HIGH;
+}else filtragemdiaria = LOW;
 
 
 
@@ -1869,7 +1868,12 @@ ultimotimerdiario = basetempo30seg;
 
 
 }
-    lcd.setCursor(12, 1);
+
+Serial.print(" tp-tbp:");
+Serial.print(temperaturaPainel - temperaturabaixapainel);
+
+
+    lcd.setCursor(5, 1);
     lcd.print(basetempo30seg);
    lcd.print("|");
    lcd.print(tempotemperaturaminimapainel);
@@ -1878,16 +1882,36 @@ ultimotimerdiario = basetempo30seg;
    lcd.print("|");
    lcd.print(ultimotimerdiario);
    // lcd.print(basetempo30seg - (tempotemperaturaminimapainel + 360));
+   lcd.print(temperaturabaixapainel);
+
+   Serial.print(" bt30seg:");
+   Serial.print(basetempo30seg);
+   Serial.print(" tempotemperaturaminimapainel:");
+   Serial.print(tempotemperaturaminimapainel);
+
+   Serial.print(" bt30seg+20:");
+   Serial.print(basetempo30seg + 20);
+    Serial.print(" ultimotimerdiario:");
+    Serial.println(ultimotimerdiario);
+
 
 //if (basetempo30seg > tempotemperaturaminimapainel  && ultimotimerdiario > basetempo30seg - 1800){
-  if (basetempo30seg > tempotemperaturaminimapainel  && ultimotimerdiario > basetempo30seg - 20){
+  if (basetempo30seg > tempotemperaturaminimapainel  &&  basetempo30seg  > ultimotimerdiario + 20){
     ultimotimerdiario = basetempo30seg;
     temperaturabaixapainel = temperaturaPainel;
-    filtragemdiaria = HIGH;
-    minutostimerregressivo =  SetTempoTimerdiario * 2;
+    //filtragemdiaria = HIGH;
+    minutostimerregressivo =  minutostimerregressivo + SetTempoTimerdiario;
+    Serial.print("basetempo30seg: ");
+    Serial.print(basetempo30seg);
+    Serial.print(" tempotemperaturaminimapainel: ");
+    Serial.print(tempotemperaturaminimapainel);
+    Serial.print(" ultimotimerdiario: ");
+    Serial.print(ultimotimerdiario);
+    Serial.print("minutostimerregressivo: ");
+    Serial.println(minutostimerregressivo);
   } 
 
-if (basetempo30seg > ultimotimerdiario + (SetTempoTimerdiario * 2)){
+if (basetempo30seg > ultimotimerdiario + SetTempoTimerdiario){
   filtragemdiaria = LOW;
 }
 
@@ -1912,12 +1936,7 @@ if (basetempo30seg > ultimotimerdiario + (SetTempoTimerdiario * 2)){
 void Fchamadamenu(){
   //chamadamenu = HIGH;
   buttonStateSet = HIGH;
-  //if (contador < 1 || contador > 14){
-   // contador = 1;
-  //  } //else contador = contador + 1;
-  //contador = 0;
-  //delay(200);
-  //noInterrupts();
+
   tempomenu = millis();
   //tone(beepPin, 2600, 50);
  }
@@ -1926,15 +1945,14 @@ void Fchamadamenu(){
  
 
 void timerminutos(){
- // minutostimerregressivo = minutostimerregressivo + 1;
-  
+   
 buttonStateUp = HIGH;
 //tone(beepPin, 2800, 50);
   
 if (chamadamenu == LOW){
   tone(beepPin, 2800, 50);
    if (minutostimerregressivo == 0){
-       minutostimerregressivo = minutostimerregressivo + 2;
+       minutostimerregressivo = 2;
       } else minutostimerregressivo = minutostimerregressivo + 1;
 //delay(100);
 }
