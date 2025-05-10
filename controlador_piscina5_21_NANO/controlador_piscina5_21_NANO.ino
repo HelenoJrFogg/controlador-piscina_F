@@ -332,8 +332,10 @@ void loop(void){
 
     referenciabasetempo10seg = millis() / 10000;
 
-    if (referenciabasetempo10seg > ultimoreferenciabasetempo10seg || referenciabasetempo10seg < ultimoreferenciabasetempo10seg){
-        ultimoreferenciabasetempo10seg = referenciabasetempo10seg;
+    //if (referenciabasetempo10seg > ultimoreferenciabasetempo10seg || referenciabasetempo10seg < ultimoreferenciabasetempo10seg){
+    if (referenciabasetempo10seg != ultimoreferenciabasetempo10seg){
+        
+    ultimoreferenciabasetempo10seg = referenciabasetempo10seg;
         basetempo10seg = basetempo10seg + 1;
     }
     basetempo30seg = basetempo10seg / 3;
@@ -1130,7 +1132,7 @@ timerdiario ();
   //Serial.print(" <<< ");
   
   
-previousMillis = millis();
+//previousMillis = millis();
 
 if (temperaturapiscina < -300 || temperaturaPainel < -400 || tempersaidaaquecedor < -300 ){
 errosensor = HIGH;
@@ -1215,66 +1217,10 @@ tempomenu = basetempo10seg;
     lcd.write((byte)0);
 }    
 
-  circulacaodeprot();
 
 
-     
-   /*
-   if ((temperaturaPainel >= (SetTemperSuperAqEEPROM /5) + 40) || (temperaturaPainel * 10 < SetTemperDegeloEEPROM))
-        {
-          digitalWrite(bomba1, HIGH);
-         tempo = basetempo10seg;
-        }     
-      else{
-        if (tempo + 6 <= basetempo10seg ){
-             digitalWrite(bomba1, LOW);
-             }
-        
-      
-       else { circulacaodeprotecao = LOW;
+ circulacaodeprot();
 
-              tempointervdeprot = basetempo30seg;
-              tempobombaacioncircprot = basetempo10seg;
-      
-       }
-
-if (temperaturaPainel * 2 >= SetTemperSuperAqEEPROM && circulacaodeprotecao == LOW ){
-      disparoaquecerpiscina = HIGH;
-      TAcionBomba = basetempo10seg;
-      }
-       else {disparoaquecerpiscina = LOW;
-        
-      }
-
-
-
-
-int difT = temperaturapiscina * 10 + DifTemperEntrSaidaEEPROM;
-int temperAq = tempersaidaaquecedor * 10;
-
-if (  temperAq >= difT){
-    difentrsaida = HIGH;
-    TAcionBomba = basetempo10seg;
-    }
-    else difentrsaida = LOW; 
-
-
-
- //int ligarbomba;
- 
-
-
- tbomba = basetempo10seg - TAcionBomba;
-
- if ( (tbomba  < SetTempoAcionBombaEEPROM) || disparoaquecerpiscina == HIGH )  {
-     bomba1_acionada = HIGH;
-     //digitalWrite(bomba, HIGH);
-     }
- else{bomba1_acionada = LOW;
-    // digitalWrite(bomba, LOW);
-     }
- }
-   */  
  
  controle_bomba_aq();
  
@@ -1378,11 +1324,7 @@ void controle_botaoDw(){
 
 
 void  atualizaeeprom(){
-  //    Serial.print();
-  //Serial.print("SetTemperPiscina: ");
-  //Serial.print(SetTemperPiscina);
-  //Serial.print(" TemperPiscEEPROM:");
-  //Serial.println(TemperPiscEEPROM);
+
     
    if (SetTemperPiscFloat != TemperPiscEEPROM){
       EEPROM.write(0, (SetTemperPiscFloat ));
@@ -1512,8 +1454,7 @@ if (aquecendo == HIGH && circularaquecimento == LOW && basetempo30seg >= tempoci
   circularaquecimento = HIGH;
   tempocirculacaoaquecimento = basetempo30seg + SetTempoAcionBombaCirc;
   
- //lcd.setCursor(7, 3);
-  //lcd.print("C");
+
 
   }
 
@@ -1525,8 +1466,7 @@ if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento
   circularaquecimento = LOW;
   tempocirculacaoaquecimento = basetempo30seg + SetTempoBombaCircDesl;
   
-  //lcd.setCursor(7, 3);
-  //lcd.print("  ");
+
   }
 
 }   
