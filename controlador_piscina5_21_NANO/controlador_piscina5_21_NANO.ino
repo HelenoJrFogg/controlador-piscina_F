@@ -337,8 +337,9 @@ void loop(void){
         
     ultimoreferenciabasetempo10seg = referenciabasetempo10seg;
         basetempo10seg = basetempo10seg + 1;
+        basetempo30seg = basetempo10seg / 3;
     }
-    basetempo30seg = basetempo10seg / 3;
+    
    
 
 
