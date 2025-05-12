@@ -1412,14 +1412,19 @@ void  atualizaeeprom(){
 
 void controle_bomba_aq(){
    
-  //Liga Aquecimento   
-      if (errosensor == LOW && temperaturapiscina + 3 < TemperPiscEEPROM * 5 && temperaturaPainel >= SetTempInPainelEEPROM * 5 && SetAquecimentoAutomaticoEEPROM == HIGH){ 
+  //Liga Aquecimento 
+  
 
+  if ( temperaturaPainel >= SetTempInPainelEEPROM * 5 ){     
+     if (temperaturapiscina + 3 < TemperPiscEEPROM * 5 ){ 
+      if ( SetAquecimentoAutomaticoEEPROM == HIGH && errosensor == LOW  ) { 
         aquecendo = HIGH; 
         tempoestabilizacao = basetempo10seg + 6;  
        } 
-         // Serial.print(basetempo10seg);
-         // Serial.print(tempoestabilizacao);
+     }
+  } 
+        // Serial.print(basetempo10seg);
+        // Serial.print(tempoestabilizacao);
    
   //Desliga Aquecimento////////////////////////////////////////   
 if (aquecendo == HIGH && basetempo10seg > tempoestabilizacao || temperaturapiscina >= TemperPiscEEPROM * 5 ){ 
