@@ -202,6 +202,8 @@ unsigned long tempotemperaturaminimapainel = 0;
 bool filtragemdiaria;
 bool acionarbombafiltro = LOW;
 bool acionamentocircprot = LOW;
+int temperinicioaq;
+int temperiniciocirc;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1413,20 +1415,65 @@ void  atualizaeeprom(){
 void controle_bomba_aq(){
    
   //Liga Aquecimento 
-  
+if (aquecendo == LOW ){  
 
   if ( temperaturaPainel >= SetTempInPainelEEPROM * 5 ){     
      if (temperaturapiscina + 3 < TemperPiscEEPROM * 5 ){ 
       if ( SetAquecimentoAutomaticoEEPROM == HIGH && errosensor == LOW  ) { 
         aquecendo = HIGH; 
-        tempoestabilizacao = basetempo10seg + 6;  
+        tempoestabilizacao = basetempo10seg + 12; 
+        temperinicioaq = tempersaidaaquecedor + 10;
        } 
      }
   } 
+}
+        // Serial.print(" bt10 ");
         // Serial.print(basetempo10seg);
         // Serial.print(tempoestabilizacao);
-   
-  //Desliga Aquecimento////////////////////////////////////////   
+
+        if (aquecendo == HIGH && basetempo10seg == tempoestabilizacao){
+          //Serial.print(" tempeinicioaq ");
+         // Serial.print(temperinicioaq);
+           
+          if (tempersaidaaquecedor < temperinicioaq ){
+            if (tempersaidaaquecedor > temperinicioaq - 20){
+              lcd.clear();
+              lcd.setCursor(4, 0);
+              lcd.print(F("VERIFICAR"));
+              lcd.setCursor(7, 1);
+              lcd.print(F("BOMBA"));
+              lcd.setCursor(5, 2);
+              lcd.print(F("AQUECIMENTO"));
+
+
+              for (int i = 0; i < 20; i++){
+                
+              tone(beepPin, 3700, 50);
+              delay(100);
+              tone(beepPin, 3200, 50);
+              delay(150);
+              lcd.noBacklight();
+              delay(150);
+              lcd.backlight();
+          
+              }
+              delay(30000);
+              lcd.clear();
+             // tone(beepPin, 3000, 1000);
+             // delay(1000);
+            //  tone(beepPin, 3500, 1000);
+            //  delay(1000);
+            //  tone(beepPin, 3200, 1000);    
+             // delay(1000);
+                          //
+
+
+            }
+          } 
+        }
+             
+  //Desliga Aquecimento////////////////////////////////////////  
+
 if (aquecendo == HIGH && basetempo10seg > tempoestabilizacao || temperaturapiscina >= TemperPiscEEPROM * 5 ){ 
    if (tempersaidaaquecedor - temperaturapiscina  < SetDifTempEntrSaida  ){
      aquecendo = LOW;
