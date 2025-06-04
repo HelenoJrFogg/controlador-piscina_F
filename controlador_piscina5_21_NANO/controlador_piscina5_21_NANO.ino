@@ -1445,6 +1445,8 @@ if (aquecendo == LOW ){
               lcd.setCursor(5, 2);
               lcd.print(F("AQUECIMENTO"));
 
+              digitalWrite(bomba1, LOW);
+
 
               for (int i = 0; i < 20; i++){
                 
