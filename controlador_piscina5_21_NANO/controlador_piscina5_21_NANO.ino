@@ -584,7 +584,7 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
             }
             lcd.print(segundos); 
             //lcd.setCursor(9, 3);
-            lcd.print(F(" "));
+            lcd.print(F("  "));
             lcd.print(SetTempoTimerdiario);
             lcd.print(F(" Minutos"));
              
@@ -966,13 +966,13 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
                 if (buttonStateUp == HIGH){
                   tone(beepPin, 3000, 3000);
                   lcd.clear();
-                  lcd.setCursor(2, 0);
+                  lcd.setCursor(2, 1);
                   lcd.print(F("Restaurando"));
                   //delay(1000);
                   //lcd.clear();
                   lcd.setCursor(0, 2);
                   lcd.print(F("Valores de Fabrica"));
-                  delay(3000);
+                  
                   
                   SetTemperPiscFloat = 62;           //1       /2 31 graus
                   SetAquecimentoAutomatico = 1;      //2          ligado
@@ -986,11 +986,13 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
                   SetTempoBombaDeslFloat = 40;       //10      /2 20 minutos
                   SetTempoAcionBombaCirc = 20;       //11         20 minutos
                   SetTempoBombaCircDesl = 60;        //12         60 minutos
-                  
-                
-                contador = 1;
+                  delay(2000);
+                buttonStateSet = HIGH;
+                contador ++;
                 restfabrica = LOW;
                 buttonStateUp = LOW;
+                
+
                 break;
                 }
                 
@@ -1306,7 +1308,7 @@ tempomenu = basetempo10seg;
     //lcd.noAutoscroll();
     lcd.setCursor(9, 2);
     lcd.print("Ganho:");
-    lcd.print(  (sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0)),2);
+    lcd.print(  (sensor_retorno.getTempCByIndex(0) - sensor_piscina.getTempCByIndex(0)),1);
     lcd.write((byte)0);
 }    
 
@@ -1947,8 +1949,8 @@ void timerdiario (){
 if (temperaturaPainel < temperaturabaixapainel){
 
 temperaturabaixapainel = temperaturaPainel;
-//tempotemperaturaminimapainel = basetempo30seg + 360;
-tempotemperaturaminimapainel = basetempo30seg + 10;
+tempotemperaturaminimapainel = basetempo30seg + 360;
+//tempotemperaturaminimapainel = basetempo30seg + 10;
 ultimotimerdiario = basetempo30seg;
 
 
@@ -1981,7 +1983,8 @@ Serial.print(temperaturaPainel - temperaturabaixapainel);
 
 
 //if (basetempo30seg > tempotemperaturaminimapainel  && ultimotimerdiario > basetempo30seg - 1800){
-  if (basetempo30seg > tempotemperaturaminimapainel  &&  basetempo30seg  > ultimotimerdiario + 20){
+  //if (basetempo30seg > tempotemperaturaminimapainel  &&  basetempo30seg  > ultimotimerdiario + 20){
+  if (basetempo30seg > tempotemperaturaminimapainel  &&  basetempo30seg  > ultimotimerdiario + 2040){
     ultimotimerdiario = basetempo30seg;
     temperaturabaixapainel = temperaturaPainel;
     //filtragemdiaria = HIGH;
