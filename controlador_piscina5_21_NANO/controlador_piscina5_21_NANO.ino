@@ -1292,12 +1292,12 @@ tempomenu = basetempo10seg;
 
 }else{
 
-    lcd.setCursor(2, 0);
+    lcd.setCursor(5, 0);
     lcd.print("Piscina: ");
     lcd.print(sensor_piscina.getTempCByIndex(0),2);
     lcd.write((byte)0);
     lcd.setCursor(0, 1);
-    //lcd.print("Painel:");
+    lcd.print("Painel: ");
     lcd.print(sensor_painel.getTempCByIndex(0),1);
     lcd.write((byte)0);
     // lcd.autoscroll();
@@ -1628,7 +1628,7 @@ if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento
     if (aquecendo == HIGH && circulacaodeprotecao == LOW){
     digitalWrite(bomba1, HIGH);
     lcd.setCursor(0, 3);
-    lcd.print(F("AQUECENDO"));
+    lcd.print(F("Aquecendo"));
 
      if (aquecendoT == HIGH){
            digitalWrite(bomba2, HIGH);
@@ -1906,6 +1906,8 @@ if (ultimosminutostimerregressivo < basetempo10seg/6 && minutostimerregressivo >
   //lcd.clear();
   //  lcd.setCursor(10, 3);
  // lcd.print(F("Filt.Lg"));
+
+
 if (minutostimerregressivo > 99){
    lcd.setCursor(10, 3);
   lcd.print(F("Filt.Lg"));
@@ -1914,13 +1916,16 @@ if (minutostimerregressivo > 99){
   } else if (minutostimerregressivo > 9){
      lcd.setCursor(10, 3);
   lcd.print(F("Filt.Lg "));
- lcd.setCursor(18, 3);
+  lcd.setCursor(18, 3);
   lcd.print(minutostimerregressivo);
   } else if (minutostimerregressivo > 0){
- lcd.setCursor(19, 3); lcd.setCursor(10, 3);
+    lcd.setCursor(10, 3);
   lcd.print(F("Filt.Lg  "));
+  lcd.setCursor(19, 3); 
   lcd.print(minutostimerregressivo);
   }
+
+
  
 //filtragemdiaria = HIGH;
 
@@ -1956,30 +1961,30 @@ ultimotimerdiario = basetempo30seg;
 
 }
 
-Serial.print(" tp-tbp:");
-Serial.print(temperaturaPainel - temperaturabaixapainel);
+//Serial.print(" tp-tbp:");
+//Serial.print(temperaturaPainel - temperaturabaixapainel);
 
 
-    lcd.setCursor(5, 1);
-    lcd.print(basetempo30seg);
-   lcd.print("|");
-   lcd.print(tempotemperaturaminimapainel);
+    //lcd.setCursor(5, 1);
+   // lcd.print(basetempo30seg);
+   //lcd.print("|");
+  // lcd.print(tempotemperaturaminimapainel);
    // lcd.print(basetempo30seg - (tempotemperaturaminimapainel + 360));
     //lcd.setCursor(13, 1);
-   lcd.print("|");
-   lcd.print(ultimotimerdiario);
+   //lcd.print("|");
+   //lcd.print(ultimotimerdiario);
    // lcd.print(basetempo30seg - (tempotemperaturaminimapainel + 360));
-   lcd.print(temperaturabaixapainel);
+   //lcd.print(temperaturabaixapainel);
 
-   Serial.print(" bt30seg:");
-   Serial.print(basetempo30seg);
-   Serial.print(" tempotemperaturaminimapainel:");
-   Serial.print(tempotemperaturaminimapainel);
+   //Serial.print(" bt30seg:");
+   //Serial.print(basetempo30seg);
+   //Serial.print(" tempotemperaturaminimapainel:");
+   //Serial.print(tempotemperaturaminimapainel);
 
-   Serial.print(" bt30seg+20:");
-   Serial.print(basetempo30seg + 20);
-    Serial.print(" ultimotimerdiario:");
-    Serial.println(ultimotimerdiario);
+   //Serial.print(" bt30seg+20:");
+   //Serial.print(basetempo30seg + 20);
+   // Serial.print(" ultimotimerdiario:");
+   // Serial.println(ultimotimerdiario);
 
 
 //if (basetempo30seg > tempotemperaturaminimapainel  && ultimotimerdiario > basetempo30seg - 1800){
@@ -1989,14 +1994,14 @@ Serial.print(temperaturaPainel - temperaturabaixapainel);
     temperaturabaixapainel = temperaturaPainel;
     //filtragemdiaria = HIGH;
     minutostimerregressivo =  minutostimerregressivo + SetTempoTimerdiario;
-    Serial.print("basetempo30seg: ");
-    Serial.print(basetempo30seg);
-    Serial.print(" tempotemperaturaminimapainel: ");
-    Serial.print(tempotemperaturaminimapainel);
-    Serial.print(" ultimotimerdiario: ");
-    Serial.print(ultimotimerdiario);
-    Serial.print("minutostimerregressivo: ");
-    Serial.println(minutostimerregressivo);
+    //Serial.print("basetempo30seg: ");
+    //Serial.print(basetempo30seg);
+    //Serial.print(" tempotemperaturaminimapainel: ");
+   // Serial.print(tempotemperaturaminimapainel);
+   // Serial.print(" ultimotimerdiario: ");
+   // Serial.print(ultimotimerdiario);
+    //Serial.print("minutostimerregressivo: ");
+    //Serial.println(minutostimerregressivo);
   } 
 
 if (basetempo30seg > ultimotimerdiario + SetTempoTimerdiario){
@@ -2041,7 +2046,7 @@ if (chamadamenu == LOW){
   tone(beepPin, 2800, 50);
    if (minutostimerregressivo == 0){
        minutostimerregressivo = 2;
-      } else minutostimerregressivo = minutostimerregressivo + 1;
+    } else minutostimerregressivo = minutostimerregressivo + 1;
 //delay(100);
 }
 }
