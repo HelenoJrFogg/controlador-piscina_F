@@ -1723,14 +1723,20 @@ if (basetempo10seg >0){
 
 
 
-if (circulacaodeprotecao == LOW ){
-         circulacaodeprotecao = HIGH;
+      //if (circulacaodeprotecao == LOW ){
+       //  circulacaodeprotecao = HIGH;
         // tempobombaacioncircprot = basetempo10seg;
-        }
+      //  }
  
       if (digitalRead(bomba1) == LOW && basetempo10seg >= tempobombaacioncircprot){
         acionamentocircprot = HIGH;
         tempobombaacioncircprot = basetempo10seg + SetTempoAcionBomba;
+        tone(beepPin, 2700, 500);
+        delay(100);
+         tone(beepPin, 2700, 500);
+         delay(100);
+          tone(beepPin, 2700, 500);
+          delay(100);
         
        }
 
