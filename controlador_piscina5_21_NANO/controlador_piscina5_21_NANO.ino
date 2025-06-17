@@ -331,6 +331,12 @@ void loop(void){
     sensor_piscina.requestTemperatures();
     sensor_painel.requestTemperatures();
     sensor_retorno.requestTemperatures();
+    
+
+
+  temperaturapiscina   = 10 * sensor_piscina.getTempCByIndex(0);
+  temperaturaPainel    = 10 * sensor_painel.getTempCByIndex(0);
+  tempersaidaaquecedor = 10 * sensor_retorno.getTempCByIndex(0);
 
 
     referenciabasetempo10seg = millis() / 10000;
@@ -1175,7 +1181,7 @@ if ((botoes != ultimoestadobotoes)  || (millis() - whilelastTime > 500 ) ) {
           break; 
 
         
-      default:
+      //default:
       contador = 0;
       lcd.clear();
     }//switch
@@ -1210,9 +1216,9 @@ if (chamadamenu != mudancaLCD){
   
 
 
-  temperaturapiscina   = 10 * sensor_piscina.getTempCByIndex(0);
-  temperaturaPainel    = 10 * sensor_painel.getTempCByIndex(0);
-  tempersaidaaquecedor = 10 * sensor_retorno.getTempCByIndex(0);
+  //temperaturapiscina   = 10 * sensor_piscina.getTempCByIndex(0);
+  //temperaturaPainel    = 10 * sensor_painel.getTempCByIndex(0);
+  ///tempersaidaaquecedor = 10 * sensor_retorno.getTempCByIndex(0);
   
 
 timerdiario ();
@@ -1605,7 +1611,7 @@ if (aquecendo == HIGH && circularaquecimento == LOW && basetempo30seg >= tempoci
 
   }
 
- digitalWrite(ledPin, digitalRead(bombafiltro)) ; 
+ //digitalWrite(ledPin, digitalRead(bombafiltro)) ; 
 
 //Desliga Circulação////////////////////////////////////////
 if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento){
@@ -1711,11 +1717,13 @@ if (aquecendo == LOW && acionamentocircprot == LOW  ){
 
                             /// Função circulaçao de proteçao
   void circulacaodeprot(){
-
+if (basetempo10seg >0){
 
  if (errosensor == LOW && temperaturaPainel /5 > SetTemperSuperAqEEPROM  || temperaturaPainel <= SetTemperDegeloEEPROM  ){
 
-       if (circulacaodeprotecao == LOW ){
+
+
+if (circulacaodeprotecao == LOW ){
          circulacaodeprotecao = HIGH;
         // tempobombaacioncircprot = basetempo10seg;
         }
@@ -1740,7 +1748,7 @@ if (aquecendo == LOW && acionamentocircprot == LOW  ){
            tempobombaacioncircprot = basetempo10seg + (SetTempoBombaDesl * 3); 
            }
 
-
+}
       
  } // Fim circulacaodeprot
 
