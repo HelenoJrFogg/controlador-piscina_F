@@ -54,8 +54,8 @@ unsigned long lastDebounceTimeDw = 0;  // the last time the output pin was toggl
    //bool chamarMenu = 0;
    unsigned long tempochamarmenuTimer = 0;
    //bool estadochamarmenu;
-   bool estadochamarmenuTimer;
-   //unsigned long lastDebounceTimeMenu = 0;
+   //bool estadochamarmenuTimer;
+   unsigned long tempoalarme = 0;
    bool mudancaLCD;
    unsigned long tempomenu;
    bool botoes = LOW;
@@ -189,15 +189,15 @@ boolean chamadamenuTimer = 0;
 
 //int segundos, minutos, horas, total, total1;
 int segundos, minutos, horas, total;
-unsigned long previousMillis;
+//unsigned long previousMillis;
 //const long interval = 800; 
 
 int temperaturapiscina;
 int tempersaidaaquecedor;
 int temperaturaPainel ;
 
-boolean disparoaquecerpiscina;
-boolean difentrsaida;
+//boolean disparoaquecerpiscina;
+//boolean difentrsaida;
 
 boolean aquecendo;
 boolean aquecendoT;
@@ -208,11 +208,11 @@ unsigned long ultimoreferenciabasetempo10seg = 0;
 unsigned long basetempo10seg = 0;
 unsigned long basetempo30seg;
 int TAcionBomba;
-int TIntervBomba;
-boolean bomba1_acionada;
-unsigned long tbomba;
+//int TIntervBomba;
+//boolean bomba1_acionada;
+//unsigned long tbomba;
 unsigned long tempobombaacioncircprot; //tempo de acionamento da bomba no acionamento de proteção.
-unsigned long tempointervdeprot;       // tempo de intervalo da bomba no acionamento de proteção. 
+//unsigned long tempointervdeprot;       // tempo de intervalo da bomba no acionamento de proteção. 
 
  //unsigned long tempo;
 
@@ -223,7 +223,7 @@ unsigned long tempoestabilizacao = 0;
 int circularaquecimento;
 int ultimoestadocircularaquecimento;
 unsigned long tempocirculacaoaquecimento =2;
-int circulando = LOW;
+//int circulando = LOW;
 int modoteste = 0;
 int modotestesaidas ;
 int timerregressivo = 0;
@@ -239,7 +239,7 @@ bool filtragemdiaria;
 bool acionarbombafiltro = LOW;
 bool acionamentocircprot = LOW;
 int temperinicioaq;
-int temperiniciocirc;
+//int temperiniciocirc;
 bool restfabrica = LOW;
 
 
@@ -1324,7 +1324,7 @@ if (temperaturapiscina < -300 || temperaturaPainel < -400 || tempersaidaaquecedo
   //Serial.println(errosensor);
 
 
-if ((errosensor == HIGH || SetAquecimentoAutomaticoEEPROM == LOW) && basetempo10seg > tempomenu ){
+if ((errosensor == HIGH || SetAquecimentoAutomaticoEEPROM == LOW) && basetempo10seg > tempoalarme ){
   
   lcd.clear(); 
   if (errosensor == HIGH && temperaturapiscina < -300){
@@ -1381,7 +1381,7 @@ delay(2000);
     //lcd.print("Ret:");
     //lcd.print();
     //lcd.noAutoscroll();{
-tempomenu = basetempo10seg + 1 ;
+tempoalarme = basetempo10seg + 1 ;
 
 }else{
 
@@ -1418,7 +1418,7 @@ tempomenu = basetempo10seg + 1 ;
 
 //Serial.println(millis() - previousMillis);
   
-
+digitalWrite(ledPin, circulacaodeprotecao); //desliga led de aquecimento
 
   
 }
@@ -1574,7 +1574,7 @@ void  atualizaeeprom(){
             //lcd.setCursor(0, 1);
            //lcd.print("    memoria");
           tone(beepPin, 3700, 2000);
-        delay(3000);
+        delay(2000);
         lcd.clear();
             
     TemperPiscEEPROM = EEPROM.read(0);
@@ -1754,7 +1754,7 @@ if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento
 if (aquecendo == LOW && acionamentocircprot == LOW  ){
     digitalWrite(bomba1, LOW);
     lcd.setCursor(0, 3);
-    lcd.print("Aqu.Desl ");
+    lcd.print("Aqu.Desl.");
     }
 
 
@@ -1804,9 +1804,10 @@ if (aquecendo == LOW && acionamentocircprot == LOW  ){
 
                             /// Função circulaçao de proteçao
   void circulacaodeprot(){
+
 if (basetempo10seg >0){
 
- if (errosensor == LOW && temperaturaPainel /5 > SetTemperSuperAqEEPROM  || temperaturaPainel <= SetTemperDegeloEEPROM  ){
+  if (errosensor == LOW && temperaturaPainel /5 > SetTemperSuperAqEEPROM  || temperaturaPainel <= SetTemperDegeloEEPROM  ){
 
 
 
@@ -1829,17 +1830,20 @@ if (basetempo10seg >0){
 
 
   } else {
-       circulacaodeprotecao = LOW;
+           //circulacaodeprotecao = LOW;
 
          }
 
 
 
-         if (  basetempo10seg >= tempobombaacioncircprot && digitalRead(bomba1) == HIGH){
-           //digitalWrite(bomba1, LOW);
-           acionamentocircprot = LOW;
-           tempobombaacioncircprot = basetempo10seg + (SetTempoBombaDesl * 3); 
-           }
+  if (basetempo10seg >= tempobombaacioncircprot && digitalRead(bomba1) == HIGH){
+     //digitalWrite(bomba1, LOW);
+    acionamentocircprot = LOW;
+    tempobombaacioncircprot = basetempo10seg + (SetTempoBombaDesl * 3); 
+    
+    circulacaodeprotecao = LOW;
+
+   }
 
 }
       
