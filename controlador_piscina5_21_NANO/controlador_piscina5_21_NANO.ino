@@ -291,7 +291,7 @@ delay(50);
        lcd.setCursor(3, 1);
        lcd.print(F("CONTROLADORES"));
        lcd.setCursor(7, 3);
-       lcd.print(F("V2.3"));
+       lcd.print(F("V2.31"));
        delay(2000);
        lcd.clear();
 
