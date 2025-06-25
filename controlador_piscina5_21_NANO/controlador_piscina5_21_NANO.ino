@@ -240,7 +240,9 @@ bool acionarbombafiltro = LOW;
 bool acionamentocircprot = LOW;
 int temperinicioaq;
 //int temperiniciocirc;
-bool restfabrica = LOW;
+bool restfabrica = LOW; 
+int tdstatus = 0; 
+float tbp;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -395,6 +397,9 @@ void loop(void){
     ultimoreferenciabasetempo10seg = referenciabasetempo10seg;
         basetempo10seg = basetempo10seg + 1;
         basetempo30seg = basetempo10seg / 3;
+        tdstatus ++;
+        lcd.setCursor(13, 1);
+        lcd.print("       ");
     }
     
    
@@ -1390,7 +1395,7 @@ tempoalarme = basetempo10seg + 1 ;
     lcd.print(sensor_piscina.getTempCByIndex(0),2);
     lcd.write((byte)0);
     lcd.setCursor(0, 1);
-    lcd.print("Painel: ");
+    lcd.print("Painel:");
     lcd.print(sensor_painel.getTempCByIndex(0),1);
     lcd.write((byte)0);
     // lcd.autoscroll();
@@ -2062,7 +2067,7 @@ temperaturabaixapainel = temperaturaPainel;
 tempotemperaturaminimapainel = basetempo30seg + 360;
 //tempotemperaturaminimapainel = basetempo30seg + 10;
 ultimotimerdiario = basetempo30seg;
-
+tbp = temperaturabaixapainel ;
 
 }
 
@@ -2122,7 +2127,33 @@ if (basetempo30seg > ultimotimerdiario + SetTempoTimerdiario){
 //Serial.print(" Ult > bs30 - 1800: ");
 //Serial.print(ultimotimerdiario - (basetempo30seg - 1800));
 
+//if (buttonStateDw == HIGH){
 
+if (tdstatus > 2){
+    tdstatus = 1;
+  }
+  //tone(beepPin, 2600, 50);
+  //delay(100);
+
+
+if ( tdstatus == 1){
+
+  lcd.setCursor(13, 1);
+  lcd.print(F("TD"));
+  //lcd.print(basetempo30seg  - (ultimotimerdiario + 2040));
+  lcd.print(ultimotimerdiario);
+
+
+}
+
+if ( tdstatus == 2){
+
+  lcd.setCursor(12, 1);
+  lcd.print(F("TBP"));
+  lcd.print(tbp/10,1);
+  //lcd.print(temperaturabaixapainel);
+
+}
 
 
 
