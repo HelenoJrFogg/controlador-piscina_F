@@ -243,6 +243,7 @@ int temperinicioaq;
 bool restfabrica = LOW; 
 int tdstatus = 0; 
 float tbp;
+int temporegressivotd;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -400,6 +401,8 @@ void loop(void){
         tdstatus ++;
         lcd.setCursor(13, 1);
         lcd.print("       ");
+        temporegressivotd =  basetempo30seg  - (ultimotimerdiario + 2400) ;
+        temporegressivotd =  tempotemperaturaminimapainel + ultimotimerdiario + 2040 - basetempo30seg ;
     }
     
    
@@ -2066,35 +2069,12 @@ if (temperaturaPainel < temperaturabaixapainel){
 temperaturabaixapainel = temperaturaPainel;
 tempotemperaturaminimapainel = basetempo30seg + 360;
 //tempotemperaturaminimapainel = basetempo30seg + 10;
-ultimotimerdiario = basetempo30seg;
+//ultimotimerdiario = basetempo30seg;
 tbp = temperaturabaixapainel ;
 
 }
 
-//Serial.print(" tp-tbp:");
-//Serial.print(temperaturaPainel - temperaturabaixapainel);
 
-
-    //lcd.setCursor(5, 1);
-   // lcd.print(basetempo30seg);
-   //lcd.print("|");
-  // lcd.print(tempotemperaturaminimapainel);
-   // lcd.print(basetempo30seg - (tempotemperaturaminimapainel + 360));
-    //lcd.setCursor(13, 1);
-   //lcd.print("|");
-   //lcd.print(ultimotimerdiario);
-   // lcd.print(basetempo30seg - (tempotemperaturaminimapainel + 360));
-   //lcd.print(temperaturabaixapainel);
-
-   //Serial.print(" bt30seg:");
-   //Serial.print(basetempo30seg);
-   //Serial.print(" tempotemperaturaminimapainel:");
-   //Serial.print(tempotemperaturaminimapainel);
-
-   //Serial.print(" bt30seg+20:");
-   //Serial.print(basetempo30seg + 20);
-   // Serial.print(" ultimotimerdiario:");
-   // Serial.println(ultimotimerdiario);
 
 
 //if (basetempo30seg > tempotemperaturaminimapainel  && ultimotimerdiario > basetempo30seg - 1800){
@@ -2138,17 +2118,45 @@ if (tdstatus > 2){
 
 if ( tdstatus == 1){
 
-  lcd.setCursor(13, 1);
-  lcd.print(F("TD"));
-  //lcd.print(basetempo30seg  - (ultimotimerdiario + 2040));
-  lcd.print(ultimotimerdiario);
+  lcd.setCursor(14, 1);
+  lcd.print(F("T"));
+  //lcd.print(temporegressivotd);
+  //lcd.print(ultimotimerdiario);
 
+
+             //total = SetTempoBombaCircDesl * 30;
+           //  horas = temporegressivotd / 120; //(total / 3600);
+           //  minutos =  temporegressivotd / 2 ; //((total - (horas * 3600)) / 60);
+           //  segundos = temporegressivotd * 3; // (total % 60);
+
+             total = temporegressivotd ;//* 30;
+             horas = (total / 120);
+             minutos = ((total - (horas * 120)) / 2);
+             //segundos = (total % 2);
+             
+             //lcd.setCursor(0, 3);
+          if (horas < 10){
+            lcd.print("0");
+             }
+             lcd.print(horas);
+             lcd.print(":");
+             //lcd.setCursor(5, 3);
+          if (minutos < 10){
+             lcd.print("0");
+             }
+             lcd.print(minutos);
+             //lcd.print(":");
+             //lcd.setCursor(8, 3);
+         // if (segundos < 10){
+          //    lcd.print("0");
+          //    }
+          //   lcd.print(segundos);
 
 }
 
 if ( tdstatus == 2){
 
-  lcd.setCursor(12, 1);
+  lcd.setCursor(13, 1);
   lcd.print(F("TBP"));
   lcd.print(tbp/10,1);
   //lcd.print(temperaturabaixapainel);
