@@ -2062,24 +2062,23 @@ if (minutostimerregressivo > 0){
 
 
 
-void timerdiario (){     
+void timerdiario (){  
+  
+//if(basetempo30seg  > ultimotimerdiario + 2040){  
+if(basetempo30seg  > ultimotimerdiario + 20){
 
-if (temperaturaPainel < temperaturabaixapainel){
+  
+   if (temperaturaPainel < temperaturabaixapainel){
 
-temperaturabaixapainel = temperaturaPainel;
-tempotemperaturaminimapainel = basetempo30seg + 360;
-//tempotemperaturaminimapainel = basetempo30seg + 10;
-//ultimotimerdiario = basetempo30seg;
-tbp = temperaturabaixapainel ;
+      temperaturabaixapainel = temperaturaPainel;
+      tempotemperaturaminimapainel = basetempo30seg + 360;
+      //tempotemperaturaminimapainel = basetempo30seg + 10;
+      //ultimotimerdiario = basetempo30seg;
+      tbp = temperaturabaixapainel ;
 
-}
+   }
 
-
-
-
-//if (basetempo30seg > tempotemperaturaminimapainel  && ultimotimerdiario > basetempo30seg - 1800){
-  //if (basetempo30seg > tempotemperaturaminimapainel  &&  basetempo30seg  > ultimotimerdiario + 20){
-  if (basetempo30seg > tempotemperaturaminimapainel  &&  basetempo30seg  > ultimotimerdiario + 2040){
+  if (basetempo30seg > tempotemperaturaminimapainel ){
     ultimotimerdiario = basetempo30seg;
     temperaturabaixapainel = temperaturaPainel;
     //filtragemdiaria = HIGH;
@@ -2093,6 +2092,19 @@ tbp = temperaturabaixapainel ;
     //Serial.print("minutostimerregressivo: ");
     //Serial.println(minutostimerregressivo);
   } 
+
+
+
+} 
+  
+
+
+
+
+
+//if (basetempo30seg > tempotemperaturaminimapainel  && ultimotimerdiario > basetempo30seg - 1800){
+  //if (basetempo30seg > tempotemperaturaminimapainel  &&  basetempo30seg  > ultimotimerdiario + 20){
+
 
 if (basetempo30seg > ultimotimerdiario + SetTempoTimerdiario){
   filtragemdiaria = LOW;
