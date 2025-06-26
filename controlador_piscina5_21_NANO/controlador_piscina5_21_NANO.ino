@@ -245,6 +245,11 @@ int tdstatus = 0;
 float tbp;
 int temporegressivotd;
 
+int tempointervalotimerdiario = 20;//2040 ; // minutos * 2. 2040 = 17 hrs
+int tempoesperatimerdiario = 10;//360; //  minutos * 2. 360 = 3 hrs
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -402,7 +407,7 @@ void loop(void){
         lcd.setCursor(13, 1);
         lcd.print("       ");
         temporegressivotd =  basetempo30seg  - (ultimotimerdiario + 2400) ;
-        temporegressivotd =  tempotemperaturaminimapainel + ultimotimerdiario + 2040 - basetempo30seg ;
+        temporegressivotd =  tempotemperaturaminimapainel + ultimotimerdiario + tempointervalotimerdiario - basetempo30seg ;
     }
     
    
@@ -2064,40 +2069,40 @@ if (minutostimerregressivo > 0){
 
 void timerdiario (){  
   
-//if(basetempo30seg  > ultimotimerdiario + 2040){  
-if(basetempo30seg  > ultimotimerdiario + 20){
+  //if(basetempo30seg  > ultimotimerdiario + 2040){    
+  if(basetempo30seg  > ultimotimerdiario + tempointervalotimerdiario){
 
   
-   if (temperaturaPainel < temperaturabaixapainel){
+     if (temperaturaPainel < temperaturabaixapainel){
+  
+        temperaturabaixapainel = temperaturaPainel;
+        tempotemperaturaminimapainel = basetempo30seg + tempoesperatimerdiario ;
+        //tempotemperaturaminimapainel = basetempo30seg + 10;
+        //ultimotimerdiario = basetempo30seg;
+         tbp = temperaturabaixapainel ;
 
+      }
+
+    if (basetempo30seg > tempotemperaturaminimapainel ){
+      ultimotimerdiario = basetempo30seg;
       temperaturabaixapainel = temperaturaPainel;
-      tempotemperaturaminimapainel = basetempo30seg + 360;
-      //tempotemperaturaminimapainel = basetempo30seg + 10;
-      //ultimotimerdiario = basetempo30seg;
-      tbp = temperaturabaixapainel ;
+      //filtragemdiaria = HIGH;
+      minutostimerregressivo =  minutostimerregressivo + SetTempoTimerdiario;
 
-   }
+     } 
 
-  if (basetempo30seg > tempotemperaturaminimapainel ){
-    ultimotimerdiario = basetempo30seg;
-    temperaturabaixapainel = temperaturaPainel;
-    //filtragemdiaria = HIGH;
-    minutostimerregressivo =  minutostimerregressivo + SetTempoTimerdiario;
-    //Serial.print("basetempo30seg: ");
-    //Serial.print(basetempo30seg);
-    //Serial.print(" tempotemperaturaminimapainel: ");
-   // Serial.print(tempotemperaturaminimapainel);
-   // Serial.print(" ultimotimerdiario: ");
-   // Serial.print(ultimotimerdiario);
-    //Serial.print("minutostimerregressivo: ");
-    //Serial.println(minutostimerregressivo);
+
+
   } 
-
-
-
-} 
   
-
+    Serial.print("basetempo30seg: ");
+    Serial.print(basetempo30seg);
+    Serial.print(" tempotemperaturaminimapainel: ");
+    Serial.print(tempotemperaturaminimapainel);
+    Serial.print(" ultimotimerdiario: ");
+    Serial.print(ultimotimerdiario);
+    Serial.print(" minutostimerregressivo: ");
+    Serial.println(minutostimerregressivo);
 
 
 
