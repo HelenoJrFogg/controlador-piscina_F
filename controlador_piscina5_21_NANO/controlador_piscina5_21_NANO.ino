@@ -233,7 +233,7 @@ int ultimoestadotimerregressivo;
 int errosensor;
 int temperaturabaixapainel = 300;
 int tempotimerdiario = 0;
-int ultimotimerdiario = 0;
+
 unsigned long tempotemperaturaminimapainel = 0;
 bool filtragemdiaria;
 bool acionarbombafiltro = LOW;
@@ -245,10 +245,10 @@ int tdstatus = 0;
 float tbp;
 int temporegressivotd;
 
-int tempointervalotimerdiario = 20;//2040 ; // minutos * 2. 2040 = 17 hrs
-int tempoesperatimerdiario = 10;//360; //  minutos * 2. 360 = 3 hrs
+int tempointervalotimerdiario = 10  ;//2040 ; // minutos * 2. 2040 = 17 hrs
+int tempoesperatimerdiario = 5      ;//360; //  minutos * 2. 360 = 3 hrs
 
-
+int ultimotimerdiario = tempointervalotimerdiario;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -406,8 +406,8 @@ void loop(void){
         tdstatus ++;
         lcd.setCursor(13, 1);
         lcd.print("       ");
-        temporegressivotd =  basetempo30seg  - (ultimotimerdiario + 2400) ;
-        temporegressivotd =  tempotemperaturaminimapainel + ultimotimerdiario + tempointervalotimerdiario - basetempo30seg ;
+        //temporegressivotd =  basetempo30seg  - (ultimotimerdiario + 2400) ;
+        temporegressivotd =  tempotemperaturaminimapainel + ultimotimerdiario - basetempo30seg ;
     }
     
    
@@ -2070,7 +2070,7 @@ if (minutostimerregressivo > 0){
 void timerdiario (){  
   
   //if(basetempo30seg  > ultimotimerdiario + 2040){    
-  if(basetempo30seg  > ultimotimerdiario + tempointervalotimerdiario){
+  if(basetempo30seg  > ultimotimerdiario ){
 
   
      if (temperaturaPainel < temperaturabaixapainel){
@@ -2084,7 +2084,7 @@ void timerdiario (){
       }
 
     if (basetempo30seg > tempotemperaturaminimapainel ){
-      ultimotimerdiario = basetempo30seg;
+      ultimotimerdiario = basetempo30seg + tempointervalotimerdiario; 
       temperaturabaixapainel = temperaturaPainel;
       //filtragemdiaria = HIGH;
       minutostimerregressivo =  minutostimerregressivo + SetTempoTimerdiario;
