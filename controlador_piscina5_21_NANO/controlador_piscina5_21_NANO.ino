@@ -2092,7 +2092,6 @@ void timerdiario (){
      } 
 
 
-
   } 
   
     Serial.print("basetempo30seg: ");
