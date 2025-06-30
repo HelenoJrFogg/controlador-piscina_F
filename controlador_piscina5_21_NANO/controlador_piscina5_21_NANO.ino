@@ -234,7 +234,7 @@ int errosensor;
 int temperaturabaixapainel = 300;
 int tempotimerdiario = 0;
 
-unsigned long tempotemperaturaminimapainel = 0;
+
 bool filtragemdiaria;
 bool acionarbombafiltro = LOW;
 bool acionamentocircprot = LOW;
@@ -243,14 +243,15 @@ int temperinicioaq;
 bool restfabrica = LOW; 
 int tdstatus = 0; 
 float tbp;
-int temporegressivotd;
+int temporegressivotd1;
+//int temporegressivotd2;
 
-int tempointervalotimerdiario = 10  ;//2040 ; // minutos * 2. 2040 = 17 hrs
-int tempoesperatimerdiario = 5      ;//360; //  minutos * 2. 360 = 3 hrs
+int tempointervalotimerdiario = 2040;//10  ;//2040 ; // minutos * 2. 2040 = 17 hrs
+int tempoesperatimerdiario =   360;//5      ;//360; //  minutos * 2. 360 = 3 hrs
 
 int ultimotimerdiario = tempointervalotimerdiario;
 
-
+unsigned long tempotemperaturaminimapainel = tempoesperatimerdiario;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -299,7 +300,7 @@ delay(50);
        lcd.setCursor(3, 1);
        lcd.print(F("CONTROLADORES"));
        lcd.setCursor(7, 3);
-       lcd.print(F("V2.31"));
+       lcd.print(F("V2.32"));
        delay(2000);
        lcd.clear();
 
@@ -375,6 +376,9 @@ delay(50);
   
 
  TAcionBomba = -1 - SetTempoAcionBombaEEPROM;
+
+//temporegressivotd = tempoesperatimerdiario + tempointervalotimerdiario;
+
 }
 
 
@@ -406,8 +410,16 @@ void loop(void){
         tdstatus ++;
         lcd.setCursor(13, 1);
         lcd.print("       ");
+
+       //if (basetempo30seg > tempotemperaturaminimapainel) {
+        // tempotemperaturaminimapainel = basetempo30seg;
+      // }
+
         //temporegressivotd =  basetempo30seg  - (ultimotimerdiario + 2400) ;
-        temporegressivotd =  tempotemperaturaminimapainel + ultimotimerdiario - basetempo30seg ;
+       
+      // temporegressivotd = temporegressivotd -1;
+  
+
     }
     
    
@@ -426,7 +438,7 @@ timer();
 
 
 /////////////Menu
-//Serial.println(tempochamarmenu);
+//Serial.println(tempochamarmenu);1
 
 if (buttonStateSet == HIGH){//} && estadochamarmenu == LOW)){  // && (millis()-  tempochamarmenu > 100)) {
 //if ((buttonStateSet == HIGH && estadochamarmenu == LOW) && (millis()-  tempochamarmenu > 100)) {
@@ -2069,10 +2081,14 @@ if (minutostimerregressivo > 0){
 
 void timerdiario (){  
   
-  //if(basetempo30seg  > ultimotimerdiario + 2040){    
-  if(basetempo30seg  > ultimotimerdiario ){
+ 
 
-  
+  if(basetempo30seg  >= ultimotimerdiario ){
+    
+   ultimotimerdiario = basetempo30seg;
+
+
+
      if (temperaturaPainel < temperaturabaixapainel){
   
         temperaturabaixapainel = temperaturaPainel;
@@ -2080,34 +2096,45 @@ void timerdiario (){
         //tempotemperaturaminimapainel = basetempo30seg + 10;
         //ultimotimerdiario = basetempo30seg;
          tbp = temperaturabaixapainel ;
+        // temporegressivotd = tempoesperatimerdiario;
 
       }
 
+
     if (basetempo30seg > tempotemperaturaminimapainel ){
+      tempotemperaturaminimapainel = basetempo30seg + tempoesperatimerdiario ;
+      temperaturabaixapainel = temperaturaPainel;
+      tbp = temperaturabaixapainel ;
+      
+    }
+  
+
+
+    if (basetempo30seg == tempotemperaturaminimapainel ){
       ultimotimerdiario = basetempo30seg + tempointervalotimerdiario; 
       temperaturabaixapainel = temperaturaPainel;
       //filtragemdiaria = HIGH;
       minutostimerregressivo =  minutostimerregressivo + SetTempoTimerdiario;
-
+     // minutostimerregressivo =  minutostimerregressivo + 4;
+     
      } 
 
 
-  } 
+  } else tempotemperaturaminimapainel = basetempo30seg + tempoesperatimerdiario ;
   
-    Serial.print("basetempo30seg: ");
+Serial.print(" total:");
+    Serial.print(total);
+
+    Serial.print(" basetempo30seg:");
     Serial.print(basetempo30seg);
-    Serial.print(" tempotemperaturaminimapainel: ");
+    Serial.print(" tempotemperaturaminimapainel:");
     Serial.print(tempotemperaturaminimapainel);
-    Serial.print(" ultimotimerdiario: ");
+    Serial.print(" ultimotimerdiario:");
     Serial.print(ultimotimerdiario);
-    Serial.print(" minutostimerregressivo: ");
+    Serial.print(" minutostimerregressivo:");
     Serial.println(minutostimerregressivo);
 
 
-
-
-//if (basetempo30seg > tempotemperaturaminimapainel  && ultimotimerdiario > basetempo30seg - 1800){
-  //if (basetempo30seg > tempotemperaturaminimapainel  &&  basetempo30seg  > ultimotimerdiario + 20){
 
 
 if (basetempo30seg > ultimotimerdiario + SetTempoTimerdiario){
@@ -2116,8 +2143,8 @@ if (basetempo30seg > ultimotimerdiario + SetTempoTimerdiario){
 
 
 
-//Serial.print("temperaturabaixapainel: ");
-//Serial.print(temperaturabaixapainel);
+Serial.print(" temperaturabaixapainel:");
+Serial.print(temperaturabaixapainel);
 //Serial.print(" ultimotimerdiario: ");
 //Serial.print(ultimotimerdiario);  
 //Serial.print(" Ult > bs30 - 1800: ");
@@ -2134,6 +2161,37 @@ if (tdstatus > 2){
 
 if ( tdstatus == 1){
 
+/*
+   if (ultimotimerdiario >= basetempo30seg){
+
+    temporegressivotd1 =  tempotemperaturaminimapainel - basetempo30seg ;
+
+
+    }else temporegressivotd1 = 0;
+
+    if (ultimotimerdiario >= basetempo30seg) {
+     temporegressivotd2  = ultimotimerdiario - basetempo30seg ;
+
+
+
+
+
+
+    } else if (ultimotimerdiario < basetempo30seg && ultimotimerdiario > 0) {
+      temporegressivotd2 = ultimotimerdiario - basetempo30seg + SetTempoTimerdiario;
+      //temporegressivotd2 = ultimotimerdiario - basetempo30seg + 1800;
+    } else temporegressivotd2 = 0;
+
+
+    */
+
+
+
+
+         temporegressivotd1 = (  tempotemperaturaminimapainel - basetempo30seg) + (ultimotimerdiario - basetempo30seg );
+
+
+
   lcd.setCursor(14, 1);
   lcd.print(F("T"));
   //lcd.print(temporegressivotd);
@@ -2145,7 +2203,7 @@ if ( tdstatus == 1){
            //  minutos =  temporegressivotd / 2 ; //((total - (horas * 3600)) / 60);
            //  segundos = temporegressivotd * 3; // (total % 60);
 
-             total = temporegressivotd ;//* 30;
+             total = temporegressivotd1 ;//+ temporegressivotd2; ;//* 30;
              horas = (total / 120);
              minutos = ((total - (horas * 120)) / 2);
              //segundos = (total % 2);
