@@ -246,8 +246,8 @@ float tbp;
 int temporegressivotd1;
 //int temporegressivotd2;
 
-int tempointervalotimerdiario = 2040;//10  ;//2040 ; // minutos * 2. 2040 = 17 hrs
-int tempoesperatimerdiario =   360;//5      ;//360; //  minutos * 2. 360 = 3 hrs
+int tempointervalotimerdiario = 20;//120;//2040;//10  ;//2040 ; // minutos * 2. 2040 = 17 hrs
+int tempoesperatimerdiario =   10;//60;//360;//5      ;//360; //  minutos * 2. 360 = 3 hrs
 
 int ultimotimerdiario = tempointervalotimerdiario;
 
@@ -278,7 +278,7 @@ void setup(void){
   pinMode(bomba2, OUTPUT);
   pinMode(bombafiltro, OUTPUT);
   
-  Serial.begin(9600);
+  Serial.begin(500000);
   //Serial.println(" ");
   
 
@@ -300,7 +300,7 @@ delay(50);
        lcd.setCursor(3, 1);
        lcd.print(F("CONTROLADORES"));
        lcd.setCursor(7, 3);
-       lcd.print(F("V2.32"));
+       lcd.print(F("V2.33"));
        delay(2000);
        lcd.clear();
 
@@ -2105,12 +2105,9 @@ void timerdiario (){
       tempotemperaturaminimapainel = basetempo30seg + tempoesperatimerdiario ;
       temperaturabaixapainel = temperaturaPainel;
       tbp = temperaturabaixapainel ;
+      tone(beepPin, 3500, 5000);
       
-    }
-  
-
-
-    if (basetempo30seg == tempotemperaturaminimapainel ){
+    } else if (basetempo30seg == tempotemperaturaminimapainel ){
       ultimotimerdiario = basetempo30seg + tempointervalotimerdiario; 
       temperaturabaixapainel = temperaturaPainel;
       //filtragemdiaria = HIGH;
@@ -2120,9 +2117,11 @@ void timerdiario (){
      } 
 
 
-  } else tempotemperaturaminimapainel = basetempo30seg + tempoesperatimerdiario ;
+  } else tempotemperaturaminimapainel = basetempo30seg + tempoesperatimerdiario - 2; // -2 para evitar que o timer fique com valor negativo
   
-Serial.print(" total:");
+    
+  
+  Serial.print(" total:");
     Serial.print(total);
 
     Serial.print(" basetempo30seg:");
