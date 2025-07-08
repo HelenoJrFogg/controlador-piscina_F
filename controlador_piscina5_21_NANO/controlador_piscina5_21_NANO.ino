@@ -1402,7 +1402,8 @@ if ((errosensor == HIGH || SetAquecimentoAutomaticoEEPROM == LOW) && basetempo10
     lcd.backlight();
 
     }
-delay(2000);
+
+    delay(2000);
 
 
 
@@ -1810,11 +1811,7 @@ if (aquecendo == LOW && acionamentocircprot == LOW  ){
       if (acionarbombafiltro == HIGH || filtragemdiaria == HIGH ){
         digitalWrite(bombafiltro, HIGH);
         
-       // if (filtragemdiaria == LOW){
-         // lcd.setCursor(10, 3);
-         // lcd.print(F(" FILTRANDO"));
-       // } 
-        //lcd.print(F(" FILTRANDO"));
+
       } 
 
   if (minutostimerregressivo == 0 && filtragemdiaria == LOW && acionarbombafiltro == LOW ){
@@ -1843,10 +1840,7 @@ if (basetempo10seg >0){
 
 
 
-      //if (circulacaodeprotecao == LOW ){
-       //  circulacaodeprotecao = HIGH;
-        // tempobombaacioncircprot = basetempo10seg;
-      //  }
+
  
       if (digitalRead(bomba1) == LOW && basetempo10seg >= tempobombaacioncircprot){
         acionamentocircprot = HIGH;
@@ -1889,20 +1883,15 @@ void timer (){
       /////////////MenuTimer
     if (buttonStateUp ==LOW){
       tempochamarmenuTimer = millis();
-     }else {
-      
-       
-     //delay(300);
      }
+
 
     if (buttonStateUp == HIGH  && (millis()-  tempochamarmenuTimer > 4000)) {
     //Serial.println(millis());
     chamadamenuTimer = HIGH;
     //lcd.clear();
     contador = 0;
-    //
-     // Serial.print("tempochamarmenuTimer");
-    //  Serial.print(tempochamarmenuTimer);
+
      tone(beepPin, 2700, 400 );
     }
 
