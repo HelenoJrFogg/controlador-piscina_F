@@ -203,9 +203,10 @@ boolean aquecendo;
 boolean aquecendoT;
 boolean circulacaodeprotecao = LOW;
 
-unsigned long referenciabasetempo10seg;
-unsigned long ultimoreferenciabasetempo10seg = 0;
-unsigned long basetempo10seg = 0;
+unsigned long referenciabasetempo2seg;
+unsigned long ultimoreferenciabasetempo2seg = 0;
+unsigned long basetempo2seg = 0;
+unsigned long basetempo10seg;
 unsigned long basetempo30seg;
 int TAcionBomba;
 //int TIntervBomba;
@@ -246,8 +247,8 @@ float tbp;
 int temporegressivotd1;
 //int temporegressivotd2;
 
-int tempointervalotimerdiario = 10 ;//120;//2040;//10  ;//2040 ; // minutos * 2. 2040 = 17 hrs
-int tempoesperatimerdiario =   6 ;//60;//360;//5      ;//360; //  minutos * 2. 360 = 3 hrs
+int tempointervalotimerdiario = 2040 ;//120;//2040;//10  ;//2040 ; // minutos * 2. 2040 = 17 hrs
+int tempoesperatimerdiario =   360 ;//60;//360;//5      ;//360; //  minutos * 2. 360 = 3 hrs
 
 int ultimotimerdiario = tempointervalotimerdiario;
 
@@ -388,37 +389,43 @@ void loop(void){
  // Serial.println(millis() - previousMillis);
   //previousMillis = millis();  
 
-    sensor_piscina.requestTemperatures();
-    sensor_painel.requestTemperatures();
-    sensor_retorno.requestTemperatures();
-    
 
 
-  temperaturapiscina   = 10 * sensor_piscina.getTempCByIndex(0);
-  temperaturaPainel    = 10 * sensor_painel.getTempCByIndex(0);
-  tempersaidaaquecedor = 10 * sensor_retorno.getTempCByIndex(0);
 
-
-    referenciabasetempo10seg = millis() / 10000;
+    referenciabasetempo2seg = millis() / 2000;
 
     //if (referenciabasetempo10seg > ultimoreferenciabasetempo10seg || referenciabasetempo10seg < ultimoreferenciabasetempo10seg){
-    if (referenciabasetempo10seg != ultimoreferenciabasetempo10seg){
+    if (referenciabasetempo2seg != ultimoreferenciabasetempo2seg){
         
-    ultimoreferenciabasetempo10seg = referenciabasetempo10seg;
-        basetempo10seg = basetempo10seg + 1;
+    ultimoreferenciabasetempo2seg = referenciabasetempo2seg;
+        basetempo2seg = basetempo2seg + 1;
+        basetempo10seg = basetempo2seg  / 5;
         basetempo30seg = basetempo10seg / 3;
         tdstatus ++;
         lcd.setCursor(13, 1);
         lcd.print("       ");
 
-       //if (basetempo30seg > tempotemperaturaminimapainel) {
-        // tempotemperaturaminimapainel = basetempo30seg;
-      // }
 
-        //temporegressivotd =  basetempo30seg  - (ultimotimerdiario + 2400) ;
-       
-      // temporegressivotd = temporegressivotd -1;
-  
+
+
+
+
+
+
+
+
+
+
+    sensor_piscina.requestTemperatures();
+    sensor_painel.requestTemperatures();
+    sensor_retorno.requestTemperatures();
+
+  temperaturapiscina   = 10 * sensor_piscina.getTempCByIndex(0);
+  temperaturaPainel    = 10 * sensor_painel.getTempCByIndex(0);
+  tempersaidaaquecedor = 10 * sensor_retorno.getTempCByIndex(0);
+
+timerdiario ();
+
 
     }
     
@@ -1324,7 +1331,7 @@ if (chamadamenu != mudancaLCD){
   ///tempersaidaaquecedor = 10 * sensor_retorno.getTempCByIndex(0);
   
 
-timerdiario ();
+//timerdiario ();
 
 
 
@@ -2096,7 +2103,7 @@ Serial.print( tempotemperaturaminimapainel + tempoesperatimerdiario - basetempo3
       tempotemperaturaminimapainel = basetempo30seg + tempoesperatimerdiario ;
       temperaturabaixapainel = temperaturaPainel;
       tbp = temperaturabaixapainel ;
-      tone(beepPin, 3500, 50);
+      tone(beepPin, 3500, 10);
        Serial.print("              total:");
     Serial.print(total);
       ultimotimerdiario = basetempo30seg - 1; 
@@ -2108,7 +2115,10 @@ Serial.print( tempotemperaturaminimapainel + tempoesperatimerdiario - basetempo3
       minutostimerregressivo =  minutostimerregressivo + SetTempoTimerdiario;
      // minutostimerregressivo =  minutostimerregressivo + 4;
      tempotemperaturaminimapainel = basetempo30seg + tempoesperatimerdiario;
-     } 
+     tone(beepPin, 3500, 100);
+     } else if( basetempo30seg > ultimotimerdiario){
+      ultimotimerdiario = basetempo30seg -1 ;
+     }
 
 
 
@@ -2209,7 +2219,7 @@ if ( tdstatus == 1){
            //  minutos =  temporegressivotd / 2 ; //((total - (horas * 3600)) / 60);
            //  segundos = temporegressivotd * 3; // (total % 60);
 
-             total = temporegressivotd1 + 5 ;//+ temporegressivotd2; ;//* 30;
+             total = temporegressivotd1 + 2 ;//+ temporegressivotd2; ;//* 30;
              horas = (total / 120);
              minutos = ((total - (horas * 120)) / 2);
              //segundos = (total % 2);
