@@ -440,7 +440,7 @@ timer();
     //leituraanalogbotoes();
     //controle_botaoSet();
     //controle_botaoUp();
-    //controle_botaoDw();
+    controle_botaoDw();
 
 
 
@@ -1836,7 +1836,7 @@ if (aquecendo == LOW && acionamentocircprot == LOW  ){
 
 if (basetempo10seg >0){
 
-  if (errosensor == LOW && temperaturaPainel /5 > SetTemperSuperAqEEPROM  || temperaturaPainel <= SetTemperDegeloEEPROM  ){
+  if (errosensor == LOW && temperaturaPainel /5 > SetTemperSuperAqEEPROM  || temperaturaPainel <= SetTemperDegeloEEPROM || buttonStateDw == HIGH ){
 
 
 
@@ -1870,6 +1870,7 @@ if (basetempo10seg >0){
     circulacaodeprotecao = LOW;
 
    }
+
 
 }
       
