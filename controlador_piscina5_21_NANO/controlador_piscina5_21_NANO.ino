@@ -427,6 +427,9 @@ void loop(void){
 timerdiario ();
 
 
+circulacaodeprot();
+
+
     }
     
    
@@ -1834,13 +1837,16 @@ if (aquecendo == LOW && acionamentocircprot == LOW  ){
                             /// Função circulaçao de proteçao
   void circulacaodeprot(){
 
-if (basetempo10seg >0){
-
-  if (errosensor == LOW && temperaturaPainel /5 > SetTemperSuperAqEEPROM  || temperaturaPainel <= SetTemperDegeloEEPROM || buttonStateDw == HIGH ){
 
 
+  if (errosensor == LOW ){
 
 
+   if (temperaturaPainel /5 > SetTemperSuperAqEEPROM  || temperaturaPainel <= SetTemperDegeloEEPROM ){
+
+
+
+    if ( basetempo10seg > 0 ){
  
       if (digitalRead(bomba1) == LOW && basetempo10seg >= tempobombaacioncircprot){
         acionamentocircprot = HIGH;
@@ -1853,12 +1859,9 @@ if (basetempo10seg >0){
           delay(100);
         
        }
+     }
 
-
-  } else {
-           //circulacaodeprotecao = LOW;
-
-         }
+  } 
 
 
 
@@ -1872,7 +1875,7 @@ if (basetempo10seg >0){
    }
 
 
-}
+  }
       
  } // Fim circulacaodeprot
 
