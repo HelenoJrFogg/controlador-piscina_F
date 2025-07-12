@@ -247,12 +247,17 @@ float tbp;
 int temporegressivotd1;
 //int temporegressivotd2;
 
-int tempointervalotimerdiario = 2040 ;//120;//2040;//10  ;//2040 ; // minutos * 2. 2040 = 17 hrs
-int tempoesperatimerdiario =   360 ;//60;//360;//5      ;//360; //  minutos * 2. 360 = 3 hrs
+int tempointervalotimerdiario = 660 ;//120;//2040;//10  ;//2040 ; // minutos * 2. 2040 = 17 hrs
+int tempoesperatimerdiario =   120 ;//60;//360;//5      ;//360; //  minutos * 2. 360 = 3 hrs
 
 int ultimotimerdiario = tempointervalotimerdiario;
 
 unsigned long tempotemperaturaminimapainel = tempoesperatimerdiario;
+
+bool CircAq = LOW; //variavel de controle de circulacao de aquecimento
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -311,7 +316,7 @@ delay(50);
        lcd.createChar(2, setaU);
        lcd.createChar(3, setaM);
     
-       tone(beepPin, 3000, 80);
+       tone(beepPin, 3200, 1000);
   /*
   tone(beepPin, 2000, 400);
   delay(500);
@@ -428,6 +433,11 @@ timerdiario ();
 
 
 circulacaodeprot();
+
+controle_bomba_aq();
+ 
+
+ acionarSaidas();
 
 
     }
@@ -1443,20 +1453,22 @@ tempoalarme = basetempo10seg + 1 ;
 
 
 
- circulacaodeprot();
+ //circulacaodeprot();
 
  
- controle_bomba_aq();
+ //controle_bomba_aq();
  
 
- acionarSaidas();
+ //acionarSaidas();
 
 
 //Serial.println(millis() - previousMillis);
   
-digitalWrite(ledPin, circulacaodeprotecao); //desliga led de aquecimento
+//digitalWrite(ledPin, circulacaodeprotecao); //desliga led de aquecimento
 
-  
+circAquecimento(); 
+
+
 }
 
 
@@ -1778,10 +1790,17 @@ if (circularaquecimento == HIGH  && basetempo30seg >= tempocirculacaoaquecimento
     if (aquecendo == LOW && acionamentocircprot == HIGH){
       digitalWrite(bomba1, HIGH);
 
+      if (CircAq == HIGH){
+        lcd.setCursor(0, 3);
+        lcd.print(F("CircAq "));
+        lcd.print((tempobombaacioncircprot  - basetempo10seg) / 6);
+
+      } else{
+
       lcd.setCursor(0, 3);
-      lcd.print(F("CIRCULACAO PROTECAO"));
+      lcd.print(F("Circ.Prot"));
 
-
+      }
 
     }
 
@@ -1871,6 +1890,7 @@ if (aquecendo == LOW && acionamentocircprot == LOW  ){
     tempobombaacioncircprot = basetempo10seg + (SetTempoBombaDesl * 3); 
     
     circulacaodeprotecao = LOW;
+    CircAq = LOW;
 
    }
 
@@ -2081,8 +2101,8 @@ if (minutostimerregressivo > 0){
 
 void timerdiario (){  
   
- Serial.print(" ttmp - tetd: ");
-Serial.print( tempotemperaturaminimapainel + tempoesperatimerdiario - basetempo30seg );
+// Serial.print(" ttmp - tetd: ");
+//Serial.print( tempotemperaturaminimapainel + tempoesperatimerdiario - basetempo30seg );
 
   if(basetempo30seg  >= ultimotimerdiario ){
     
@@ -2098,7 +2118,7 @@ Serial.print( tempotemperaturaminimapainel + tempoesperatimerdiario - basetempo3
       tbp = temperaturabaixapainel ;
       tone(beepPin, 3500, 10);
        Serial.print("              total:");
-    Serial.print(total);
+    //Serial.print(total);
       ultimotimerdiario = basetempo30seg - 1; 
 
     } else if (basetempo30seg == tempotemperaturaminimapainel ){
@@ -2131,17 +2151,17 @@ Serial.print( tempotemperaturaminimapainel + tempoesperatimerdiario - basetempo3
   
     
   
-  Serial.print(" total:");
-    Serial.print(total);
+  //Serial.print(" total:");
+   // Serial.print(total);
 
-    Serial.print(" basetempo30seg:");
-    Serial.print(basetempo30seg);
-    Serial.print(" tempotemperaturaminimapainel:");
-    Serial.print(tempotemperaturaminimapainel);
-    Serial.print(" ultimotimerdiario:");
-    Serial.print(ultimotimerdiario);
-    Serial.print(" minutostimerregressivo:");
-    Serial.println(minutostimerregressivo);
+  //  Serial.print(" basetempo30seg:");
+   // Serial.print(basetempo30seg);
+   // Serial.print(" tempotemperaturaminimapainel:");
+   // Serial.print(tempotemperaturaminimapainel);
+   // Serial.print(" ultimotimerdiario:");
+   // Serial.print(ultimotimerdiario);
+   // Serial.print(" minutostimerregressivo:");
+   // Serial.println(minutostimerregressivo);
 
 
 
@@ -2152,8 +2172,8 @@ if (basetempo30seg > ultimotimerdiario + SetTempoTimerdiario){
 
 
 
-Serial.print(" temperaturabaixapainel:");
-Serial.print(temperaturabaixapainel);
+//Serial.print(" temperaturabaixapainel:");
+//Serial.print(temperaturabaixapainel);
 //Serial.print(" ultimotimerdiario: ");
 //Serial.print(ultimotimerdiario);  
 //Serial.print(" Ult > bs30 - 1800: ");
@@ -2276,4 +2296,32 @@ if (chamadamenu == LOW){
     } else minutostimerregressivo = minutostimerregressivo + 1;
 //delay(100);
 }
+}
+
+
+
+
+
+
+void circAquecimento(){
+  
+  if (buttonStateDw == HIGH){
+    
+    tone(beepPin, 2600, 50);
+        acionamentocircprot = HIGH;
+        
+        if (CircAq == LOW){
+          tempobombaacioncircprot = basetempo10seg + 12;
+        } else tempobombaacioncircprot = tempobombaacioncircprot + 6;
+
+
+        CircAq = HIGH;
+
+        delay(400);
+
+  }
+
+ 
+
+
 }
