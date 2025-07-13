@@ -2312,12 +2312,12 @@ void circAquecimento(){
         
         if (CircAq == LOW){
           tempobombaacioncircprot = basetempo10seg + 12;
-        } else tempobombaacioncircprot = tempobombaacioncircprot + 6;
+        } else tempobombaacioncircprot = tempobombaacioncircprot + 3;
 
 
         CircAq = HIGH;
 
-        delay(400);
+        delay(200);
 
   }
 
