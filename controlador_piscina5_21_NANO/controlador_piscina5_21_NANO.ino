@@ -247,10 +247,10 @@ float tbp;
 int temporegressivotd1;
 //int temporegressivotd2;
 
-int tempointervalotimerdiario = 2040 ;//120;//2040;//10  ;//2040 ; // minutos * 2. 2040 = 17 hrs
-int tempoesperatimerdiario =   360 ;//60;//360;//5      ;//360; //  minutos * 2. 360 = 3 hrs
+int tempointervalotimerdiario = 1800 ;//120;//2040;//10  ;//2040 ; // minutos * 2. 2040 = 17 hrs
+int tempoesperatimerdiario =   480 ;//60;//360;//5      ;//360; //  minutos * 2. 360 = 3 hrs
 
-int ultimotimerdiario = tempointervalotimerdiario;
+int ultimotimerdiario = 960;//tempointervalotimerdiario;
 
 unsigned long tempotemperaturaminimapainel = tempoesperatimerdiario;
 
@@ -306,7 +306,7 @@ delay(50);
        lcd.setCursor(3, 1);
        lcd.print(F("CONTROLADORES"));
        lcd.setCursor(7, 3);
-       lcd.print(F("V2.40"));
+       lcd.print(F("V2.41"));
        delay(2000);
        lcd.clear();
 
@@ -407,8 +407,7 @@ void loop(void){
         basetempo10seg = basetempo2seg  / 5;
         basetempo30seg = basetempo10seg / 3;
         tdstatus ++;
-        lcd.setCursor(13, 1);
-        lcd.print("       ");
+
 
 
 
@@ -2181,7 +2180,7 @@ if (basetempo30seg > ultimotimerdiario + SetTempoTimerdiario){
 
 //if (buttonStateDw == HIGH){
 
-if (tdstatus > 2){
+if (tdstatus > 4){
     tdstatus = 1;
   }
   //tone(beepPin, 2600, 50);
@@ -2221,8 +2220,8 @@ if ( tdstatus == 1){
 
 
 
-  lcd.setCursor(14, 1);
-  lcd.print(F("T"));
+  lcd.setCursor(13, 1);
+  lcd.print(F("T "));
   //lcd.print(temporegressivotd);
   //lcd.print(ultimotimerdiario);
 
@@ -2257,12 +2256,15 @@ if ( tdstatus == 1){
 
 }
 
-if ( tdstatus == 2){
+if ( tdstatus == 3){
 
   lcd.setCursor(13, 1);
   lcd.print(F("TBP"));
+
   lcd.print(tbp/10,1);
   //lcd.print(temperaturabaixapainel);
+  //  lcd.print("  ");
+  lcd.write((byte)0);
 
 }
 
