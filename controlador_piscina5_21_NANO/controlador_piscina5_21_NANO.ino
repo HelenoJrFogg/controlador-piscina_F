@@ -250,7 +250,7 @@ int temporegressivotd1;
 int tempointervalotimerdiario = 1800 ;//120;//2040;//10  ;//2040 ; // minutos * 2. 2040 = 17 hrs
 int tempoesperatimerdiario =   480 ;//60;//360;//5      ;//360; //  minutos * 2. 360 = 3 hrs
 
-int ultimotimerdiario = 960;//tempointervalotimerdiario;
+unsigned long ultimotimerdiario = 960;//tempointervalotimerdiario;
 
 unsigned long tempotemperaturaminimapainel = tempoesperatimerdiario;
 
